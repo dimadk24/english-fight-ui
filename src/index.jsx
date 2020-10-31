@@ -9,8 +9,21 @@ import { Utils } from './Utils'
 // Init VK  Mini App
 bridge.send('VKWebAppInit')
 
-ReactDOM.render(<App />, document.getElementById('root'))
+function render() {
+  ReactDOM.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+    document.getElementById('root')
+  )
+}
+render()
+
 if (!Utils.isProductionMode) {
+  if (module.hot) {
+    module.hot.accept('./components/App', render)
+  }
+
   // eslint-disable-next-line no-unused-expressions
   import('./eruda')
 }
