@@ -6,8 +6,13 @@
   "scripts": {
     "start": "cross-env PORT=10888 HTTPS=true react-scripts start",
     "build": "react-scripts build",
-    "predeploy": "npm run build",
-    "deploy": "vk-miniapps-deploy"
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "test:changed": "yarn test --onlyChanged",
+    "test:watch:all": "yarn test --watchAll",
+    "test:watch:changed": "yarn test --watch --onlyChanged",
+    "format": "prettier --write \"./**/*.{js,jsx,json,css}\"",
+    "lint": "eslint \"./src/**/*.{js,jsx}\" --max-warnings=0"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +20,16 @@
   "devDependencies": {
     "cross-env": "^5.2.1",
     "react-hot-loader": "^4.13.0",
-    "react-scripts": "^3.4.4"
+    "react-scripts": "^3.4.4",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.14.0",
+    "eslint-plugin-jest-formatting": "^1.0.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react-hooks": "^4.0.2",
+    "prettier": "1.18.2"
   },
   "dependencies": {
     "@vkontakte/icons": "^1.49.0",
