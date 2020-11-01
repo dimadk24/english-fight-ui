@@ -5,7 +5,8 @@ import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenS
 import '@vkontakte/vkui/dist/vkui.css'
 
 import Home from './panels/Home'
-import Persik from './panels/Persik'
+import { AppService } from './AppService'
+import Battle from './panels/Battle'
 
 const App = () => {
   const [activePanel, setActivePanel] = useState('home')
@@ -21,21 +22,19 @@ const App = () => {
       }
     })
     async function fetchData() {
-      const user = await bridge.send('VKWebAppGetUserInfo')
+      const user = await AppService.fetchUserData()
       setUser(user)
       setPopout(null)
     }
     fetchData()
   }, [])
 
-  const go = (e) => {
-    setActivePanel(e.currentTarget.dataset.to)
-  }
+  const go = (panelId) => setActivePanel(panelId)
 
   return (
     <View activePanel={activePanel} popout={popout}>
       <Home id="home" fetchedUser={fetchedUser} go={go} />
-      <Persik id="persik" go={go} />
+      <Battle id="battle" go={go} />
     </View>
   )
 }
