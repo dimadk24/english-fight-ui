@@ -1,0 +1,11 @@
+.answer-button {
+  margin-top: 10px;
+}
+
+.answer-button.correct {
+  background: var(--success-color);
+}
+
+.answer-button.failure {
+  background: var(--failure-color);
+}

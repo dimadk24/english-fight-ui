@@ -7,6 +7,7 @@ import '@vkontakte/vkui/dist/vkui.css'
 import Home from './panels/Home'
 import { AppService } from './AppService'
 import Battle from './panels/Battle'
+import './constant-styles.css'
 
 const App = () => {
   const [activePanel, setActivePanel] = useState('home')
@@ -31,10 +32,20 @@ const App = () => {
 
   const go = (panelId) => setActivePanel(panelId)
 
+  const onFinishGame = (questions) => {
+    // eslint-disable-next-line no-console
+    console.log(questions)
+  }
+
   return (
     <View activePanel={activePanel} popout={popout}>
       <Home id="home" fetchedUser={fetchedUser} go={go} />
-      <Battle id="battle" go={go} />
+      <Battle
+        id="battle"
+        onGoBack={() => go('home')}
+        user={fetchedUser}
+        onFinishGame={onFinishGame}
+      />
     </View>
   )
 }
