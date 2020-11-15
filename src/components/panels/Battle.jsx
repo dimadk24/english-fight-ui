@@ -11,15 +11,15 @@ import { battleActions, battleReducer, initialState } from './battle-reducer'
 const Battle = ({ id: panelId, onGoBack, onFinishGame }) => {
   const [loading, setLoading] = useState(false)
   const [state, dispatch] = useReducer(battleReducer, initialState)
-  const { questions, activeQuestion, hasNextQuestion } = state
+  const { battle, activeQuestion, hasNextQuestion } = state
 
   useEffect(() => {
     const startBattle = async () => {
       setLoading(true)
-      const battle = await BattleService.startBattle()
+      const fetchedBattle = await BattleService.startBattle()
       dispatch({
-        type: battleActions.setQuestions,
-        payload: battle.questions,
+        type: battleActions.setBattle,
+        payload: fetchedBattle,
       })
       setLoading(false)
     }
@@ -44,7 +44,7 @@ const Battle = ({ id: panelId, onGoBack, onFinishGame }) => {
     await Utils.waitForTimeout(2000)
 
     if (hasNextQuestion) dispatch({ type: battleActions.goToNextQuestion })
-    else onFinishGame(questions)
+    else onFinishGame(battle)
   }
 
   return (

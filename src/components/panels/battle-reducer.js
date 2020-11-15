@@ -1,54 +1,60 @@
 export const battleActions = {
-  setQuestions: 'setQuestions',
+  setBattle: 'setBattle',
   updateQuestion: 'updateQuestion',
   goToNextQuestion: 'goToNextQuestion',
 }
 
 export const initialState = {
-  questions: [],
+  battle: null,
   activeQuestion: null,
   hasNextQuestion: false,
 }
 
 export function battleReducer(state = initialState, action) {
   switch (action.type) {
-    case battleActions.setQuestions: {
-      const questions = action.payload
+    case battleActions.setBattle: {
+      const battle = action.payload
+      const { questions } = battle
       return {
         ...state,
-        questions,
+        battle,
         activeQuestion: questions[0],
         hasNextQuestion: questions.length > 1,
       }
     }
     case battleActions.updateQuestion: {
       const updatedQuestion = action.payload
-      const questionIndex = state.questions.findIndex(
+      const currentQuestions = state.battle.questions
+      const questionIndex = currentQuestions.findIndex(
         ({ id }) => id === updatedQuestion.id
       )
       const questions = [
-        ...state.questions.slice(0, questionIndex),
+        ...currentQuestions.slice(0, questionIndex),
         updatedQuestion,
-        ...state.questions.slice(questionIndex + 1),
+        ...currentQuestions.slice(questionIndex + 1),
       ]
       return {
         ...state,
-        questions,
+        battle: {
+          ...state.battle,
+          questions,
+        },
         activeQuestion: updatedQuestion,
       }
     }
     case battleActions.goToNextQuestion: {
-      const activeQuestionIndex = state.questions.findIndex(
+      const currentQuestions = state.battle.questions
+      const activeQuestionIndex = currentQuestions.findIndex(
         ({ id }) => id === state.activeQuestion.id
       )
-      if (activeQuestionIndex === state.questions.length - 1) {
+      if (activeQuestionIndex === currentQuestions.length - 1) {
         throw new Error('You are already on the last question')
       }
       const newQuestionIndex = activeQuestionIndex + 1
       return {
         ...state,
-        activeQuestion: state.questions[newQuestionIndex],
-        hasNextQuestion: newQuestionIndex < state.questions.length - 1,
+        activeQuestion: currentQuestions[newQuestionIndex],
+        hasNextQuestion: newQuestionIndex < currentQuestions.length - 1,
       }
     }
     default:

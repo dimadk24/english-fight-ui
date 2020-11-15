@@ -1,20 +1,40 @@
 import { battleActions, battleReducer } from './battle-reducer'
 
 describe('battleReducer', () => {
-  describe('setQuestions action', () => {
-    it('sets passed questions and activeQuestion', () => {
+  describe('setBattle action', () => {
+    it('sets passed battle and activeQuestion', () => {
       const initialState = {
-        questions: [],
+        battle: null,
         activeQuestion: null,
         hasNextQuestion: false,
       }
       const action = {
-        type: battleActions.setQuestions,
-        payload: [{ id: 1 }, { id: 2 }],
+        type: battleActions.setBattle,
+        payload: {
+          id: 1,
+          questions: [
+            {
+              id: 1,
+            },
+            {
+              id: 2,
+            },
+          ],
+        },
       }
       const actual = battleReducer(initialState, action)
       const expected = {
-        questions: [{ id: 1 }, { id: 2 }],
+        battle: {
+          id: 1,
+          questions: [
+            {
+              id: 1,
+            },
+            {
+              id: 2,
+            },
+          ],
+        },
         activeQuestion: { id: 1 },
         hasNextQuestion: true,
       }
@@ -25,20 +45,23 @@ describe('battleReducer', () => {
   describe('updateQuestion action', () => {
     it('updates questions and activeQuestion', () => {
       const initialState = {
-        questions: [
-          {
-            id: 1,
-            questionWord: 'test',
-          },
-          {
-            id: 2,
-            questionWord: 'cat',
-          },
-          {
-            id: 3,
-            questionWord: 'car',
-          },
-        ],
+        battle: {
+          id: 1,
+          questions: [
+            {
+              id: 1,
+              questionWord: 'test',
+            },
+            {
+              id: 2,
+              questionWord: 'cat',
+            },
+            {
+              id: 3,
+              questionWord: 'car',
+            },
+          ],
+        },
         activeQuestion: {
           id: 2,
           questionWord: 'cat',
@@ -53,20 +76,23 @@ describe('battleReducer', () => {
       }
       const actual = battleReducer(initialState, action)
       const expected = {
-        questions: [
-          {
-            id: 1,
-            questionWord: 'test',
-          },
-          {
-            id: 2,
-            questionWord: 'dog',
-          },
-          {
-            id: 3,
-            questionWord: 'car',
-          },
-        ],
+        battle: {
+          id: 1,
+          questions: [
+            {
+              id: 1,
+              questionWord: 'test',
+            },
+            {
+              id: 2,
+              questionWord: 'dog',
+            },
+            {
+              id: 3,
+              questionWord: 'car',
+            },
+          ],
+        },
         activeQuestion: {
           id: 2,
           questionWord: 'dog',
@@ -79,16 +105,19 @@ describe('battleReducer', () => {
   describe('goToNextQuestion action', () => {
     it('moves activeQuestion to the next question when it will be the last', () => {
       const initialState = {
-        questions: [
-          {
-            id: 1,
-            questionWord: 'cat',
-          },
-          {
-            id: 2,
-            questionWord: 'dog',
-          },
-        ],
+        battle: {
+          id: 1,
+          questions: [
+            {
+              id: 1,
+              questionWord: 'cat',
+            },
+            {
+              id: 2,
+              questionWord: 'dog',
+            },
+          ],
+        },
         activeQuestion: {
           id: 1,
           questionWord: 'cat',
@@ -100,16 +129,19 @@ describe('battleReducer', () => {
       }
       const actual = battleReducer(initialState, action)
       const expected = {
-        questions: [
-          {
-            id: 1,
-            questionWord: 'cat',
-          },
-          {
-            id: 2,
-            questionWord: 'dog',
-          },
-        ],
+        battle: {
+          id: 1,
+          questions: [
+            {
+              id: 1,
+              questionWord: 'cat',
+            },
+            {
+              id: 2,
+              questionWord: 'dog',
+            },
+          ],
+        },
         activeQuestion: {
           id: 2,
           questionWord: 'dog',
@@ -121,20 +153,23 @@ describe('battleReducer', () => {
 
     it('moves activeQuestion to the next when it will not be the last', () => {
       const initialState = {
-        questions: [
-          {
-            id: 1,
-            questionWord: 'cat',
-          },
-          {
-            id: 2,
-            questionWord: 'dog',
-          },
-          {
-            id: 3,
-            questionWord: 'car',
-          },
-        ],
+        battle: {
+          id: 1,
+          questions: [
+            {
+              id: 1,
+              questionWord: 'cat',
+            },
+            {
+              id: 2,
+              questionWord: 'dog',
+            },
+            {
+              id: 3,
+              questionWord: 'car',
+            },
+          ],
+        },
         activeQuestion: {
           id: 1,
           questionWord: 'cat',
@@ -146,20 +181,23 @@ describe('battleReducer', () => {
       }
       const actual = battleReducer(initialState, action)
       const expected = {
-        questions: [
-          {
-            id: 1,
-            questionWord: 'cat',
-          },
-          {
-            id: 2,
-            questionWord: 'dog',
-          },
-          {
-            id: 3,
-            questionWord: 'car',
-          },
-        ],
+        battle: {
+          id: 1,
+          questions: [
+            {
+              id: 1,
+              questionWord: 'cat',
+            },
+            {
+              id: 2,
+              questionWord: 'dog',
+            },
+            {
+              id: 3,
+              questionWord: 'car',
+            },
+          ],
+        },
         activeQuestion: {
           id: 2,
           questionWord: 'dog',
@@ -171,16 +209,19 @@ describe('battleReducer', () => {
 
     it('throws error if user is already on the last question', () => {
       const initialState = {
-        questions: [
-          {
-            id: 1,
-            questionWord: 'cat',
-          },
-          {
-            id: 2,
-            questionWord: 'dog',
-          },
-        ],
+        battle: {
+          id: 1,
+          questions: [
+            {
+              id: 1,
+              questionWord: 'cat',
+            },
+            {
+              id: 2,
+              questionWord: 'dog',
+            },
+          ],
+        },
         activeQuestion: {
           id: 2,
           questionWord: 'dog',

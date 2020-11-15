@@ -8,7 +8,7 @@ import Div from '@vkontakte/vkui/dist/components/Div/Div'
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar'
 import PanelHeader from '../helpers/PanelHeader'
 
-const Home = ({ id, go, fetchedUser }) => (
+const Home = ({ id, onStartBattle, fetchedUser }) => (
   <Panel id={id}>
     <PanelHeader text="English fight" showBackButton={false} />
     {fetchedUser && (
@@ -26,7 +26,7 @@ const Home = ({ id, go, fetchedUser }) => (
 
     <Group>
       <Div>
-        <Button size="xl" level="2" onClick={() => go('battle')}>
+        <Button size="xl" level="2" onClick={onStartBattle}>
           Начать бой!
         </Button>
       </Div>
@@ -36,7 +36,7 @@ const Home = ({ id, go, fetchedUser }) => (
 
 Home.propTypes = {
   id: PropTypes.string.isRequired,
-  go: PropTypes.func.isRequired,
+  onStartBattle: PropTypes.func.isRequired,
   fetchedUser: PropTypes.shape({
     photoUrl: PropTypes.string.isRequired,
     firstName: PropTypes.string.isRequired,

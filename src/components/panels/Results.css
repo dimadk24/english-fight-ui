@@ -1,0 +1,9 @@
+.home-button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.home-button-wrapper > *:first-child {
+  margin-right: 32px;
+}
