@@ -5,17 +5,10 @@ export class BattleService {
     return ApiService.post('game', {}, { expand: 'questions' })
   }
 
-  // eslint-disable-next-line no-unused-vars
   static async submitQuestion(question) {
-    return {
-      id: question.id,
-      questionWord: 'Car',
-      answerWords: ['Машина', 'Мясо', 'Дверь', 'Город'],
-      correctAnswer: 'Машина',
+    return ApiService.patch(`question/${question.id}`, {
       selectedAnswer: question.selectedAnswer,
-      isCorrect: question.selectedAnswer === 'Машина',
-    }
-    // await Utils.waitForTimeout(100)
+    })
   }
 
   static getBattle() {
