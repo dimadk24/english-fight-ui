@@ -25,13 +25,16 @@ const App = () => {
         document.body.attributes.setNamedItem(schemeAttribute)
       }
     })
+  }, [])
+
+  useEffect(() => {
     async function fetchData() {
       const user = await AppService.fetchUserData()
       setUser(user)
       setPopout(null)
     }
     fetchData()
-  }, [])
+  }, [battle])
 
   const onFinishGame = async (localBattle) => {
     const updatedBattle = await BattleService.getBattle(localBattle.id)
