@@ -11,28 +11,7 @@ export class BattleService {
     })
   }
 
-  static getBattle() {
-    return {
-      id: 1,
-      questions: [
-        {
-          id: 1,
-          questionWord: 'Car',
-          answerWords: ['Машина', 'Мясо', 'Дверь', 'Город'],
-          correctAnswer: 'Машина',
-          selectedAnswer: 'Машина',
-          isCorrect: true,
-        },
-        {
-          id: 1,
-          questionWord: 'Car',
-          answerWords: ['Машина', 'Мясо', 'Дверь', 'Город'],
-          correctAnswer: 'Машина',
-          selectedAnswer: 'Машина',
-          isCorrect: false,
-        },
-      ],
-      points: 15,
-    }
+  static getBattle(id) {
+    return ApiService.get(`game/${id}`, { expand: 'questions' })
   }
 }
