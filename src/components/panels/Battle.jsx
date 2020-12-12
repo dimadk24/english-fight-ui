@@ -16,12 +16,15 @@ const Battle = ({ id: panelId, onGoBack, onFinishGame }) => {
   useEffect(() => {
     const startBattle = async () => {
       setLoading(true)
-      const fetchedBattle = await BattleService.startBattle()
-      dispatch({
-        type: battleActions.setBattle,
-        payload: fetchedBattle,
-      })
-      setLoading(false)
+      try {
+        const fetchedBattle = await BattleService.startBattle()
+        dispatch({
+          type: battleActions.setBattle,
+          payload: fetchedBattle,
+        })
+      } finally {
+        setLoading(false)
+      }
     }
     startBattle()
   }, [])
@@ -32,14 +35,17 @@ const Battle = ({ id: panelId, onGoBack, onFinishGame }) => {
       selectedAnswer: answer,
     }
     setLoading(true)
-    const questionWithAnswerData = await BattleService.submitQuestion(
-      questionToSubmit
-    )
-    setLoading(false)
-    dispatch({
-      type: battleActions.updateQuestion,
-      payload: questionWithAnswerData,
-    })
+    try {
+      const questionWithAnswerData = await BattleService.submitQuestion(
+        questionToSubmit
+      )
+      dispatch({
+        type: battleActions.updateQuestion,
+        payload: questionWithAnswerData,
+      })
+    } finally {
+      setLoading(false)
+    }
 
     await Utils.waitForTimeout(2000)
 

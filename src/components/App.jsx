@@ -29,9 +29,12 @@ const App = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const user = await AppService.fetchUserData()
-      setUser(user)
-      setPopout(null)
+      try {
+        const user = await AppService.fetchUserData()
+        setUser(user)
+      } finally {
+        setPopout(null)
+      }
     }
     fetchData()
   }, [battle])
