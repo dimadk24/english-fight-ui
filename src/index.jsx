@@ -5,14 +5,24 @@ import ReactDOM from 'react-dom'
 import bridge from '@vkontakte/vk-bridge'
 import App from './components/App'
 import { Utils } from './Utils'
+import * as Sentry from '@sentry/react'
+import { ErrorBoundary } from './components/ErrorBoundary'
 
 // Init VK  Mini App
 bridge.send('VKWebAppInit')
 
+if (Utils.isProductionMode) {
+  Sentry.init({
+    dsn: process.env.REACT_APP_SENTRY_DSN,
+  })
+}
+
 function render() {
   ReactDOM.render(
     <React.StrictMode>
-      <App />
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
     </React.StrictMode>,
     document.getElementById('root')
   )
