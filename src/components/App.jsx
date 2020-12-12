@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import bridge from '@vkontakte/vk-bridge'
 import View from '@vkontakte/vkui/dist/components/View/View'
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner'
+import Alert from '@vkontakte/vkui/dist/components/Alert/Alert'
 import '@vkontakte/vkui/dist/vkui.css'
 
 import Home from './panels/Home'
@@ -10,6 +11,9 @@ import Battle from './panels/Battle'
 import './constant-styles.css'
 import Results from './panels/Results'
 import { BattleService } from './panels/BattleService'
+import { Utils } from '../Utils'
+import * as Sentry from '@sentry/react'
+import './App.css'
 
 const App = () => {
   const [activePanel, setActivePanel] = useState('home')
@@ -25,6 +29,40 @@ const App = () => {
         document.body.attributes.setNamedItem(schemeAttribute)
       }
     })
+  }, [])
+
+  useEffect(() => {
+    if (Utils.isProductionMode) {
+      Sentry.init({
+        dsn: process.env.REACT_APP_SENTRY_DSN,
+        beforeSend(event, hint) {
+          if (event.exception) {
+            const errorMessage =
+              hint && hint.originalException && hint.originalException.message
+                ? hint.originalException.message
+                : ''
+            setPopout(
+              <Alert
+                actions={[
+                  {
+                    title: 'ОК',
+                    autoclose: true,
+                  },
+                ]}
+                onClose={() => setPopout(null)}
+              >
+                <h2>Возникла ошибка =(</h2>
+                {errorMessage && (
+                  <p className="error-message">{errorMessage}</p>
+                )}
+                <p>Попробуй еще раз</p>
+              </Alert>
+            )
+          }
+          return event
+        },
+      })
+    }
   }, [])
 
   useEffect(() => {
