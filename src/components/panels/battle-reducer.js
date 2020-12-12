@@ -48,7 +48,7 @@ export function battleReducer(state = initialState, action) {
         ({ id }) => id === state.activeQuestion.id
       )
       if (activeQuestionIndex === currentQuestions.length - 1) {
-        throw new Error('You are already on the last question')
+        throw new Error('Вы уже на последнем вопросе')
       }
       const newQuestionIndex = activeQuestionIndex + 1
       return {

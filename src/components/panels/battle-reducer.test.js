@@ -231,7 +231,7 @@ describe('battleReducer', () => {
         type: battleActions.goToNextQuestion,
       }
       expect(() => battleReducer(initialState, action)).toThrow(
-        'You are already on the last question'
+        'Вы уже на последнем вопросе'
       )
     })
   })

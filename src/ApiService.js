@@ -122,19 +122,19 @@ export class ApiService {
    */
   static async processResponse(response) {
     if (response.status >= 500 && response.status < 600) {
-      throw new Error('Internal server error')
+      throw new Error('Внутренняя ошибка сервера')
     }
     let json
     try {
       json = await response.json()
     } catch (e) {
-      throw new Error('Invalid response from the server')
+      throw new Error('Неверный ответ сервера')
     }
     if (!response.ok) {
       if (json.detail) {
         throw new Error(json.detail)
       }
-      throw new Error('Unknown application error')
+      throw new Error('Неизвестная ошибка приложения')
     }
     return ApiService.convertDataToFrontendFormat(json)
   }
