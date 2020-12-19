@@ -62,6 +62,7 @@ const App = () => {
           return event
         },
       })
+      Utils.initMetrika()
     }
   }, [])
 
