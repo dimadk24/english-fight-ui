@@ -2,7 +2,7 @@ name: Main workflow
 on: push
 jobs:
   lint:
-    name: Link with eslint
+    name: Lint with eslint
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout code
