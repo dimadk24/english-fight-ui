@@ -10,7 +10,7 @@ import PanelHeader from '../helpers/PanelHeader'
 
 const Home = ({ id, onStartBattle, fetchedUser }) => (
   <Panel id={id}>
-    <PanelHeader text="English fight" showBackButton={false} />
+    <PanelHeader text="Language fight" showBackButton={false} />
     {fetchedUser && (
       <Group>
         <Cell
