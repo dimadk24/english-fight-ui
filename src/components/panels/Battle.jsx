@@ -30,10 +30,7 @@ const Battle = ({ id: panelId, onGoBack, onFinishGame }) => {
   }, [])
 
   const onSelectAnswer = async (answer) => {
-    const questionToSubmit = {
-      ...activeQuestion,
-      selectedAnswer: answer,
-    }
+    const questionToSubmit = activeQuestion.set('selectedAnswer', answer)
     setLoading(true)
     try {
       const questionWithAnswerData = await BattleService.submitQuestion(
