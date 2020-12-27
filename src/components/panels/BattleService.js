@@ -1,4 +1,4 @@
-import { ApiService } from '../../ApiService'
+import { ApiService } from '../../core/ApiService'
 
 export class BattleService {
   static async startBattle() {
