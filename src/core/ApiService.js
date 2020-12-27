@@ -11,14 +11,20 @@ export class ApiService {
    * @param data
    * @param sendToken
    * @param expand
+   * @param Model
    * @returns {Promise<*>}
    */
-  static async post(url, data, { sendToken = true, expand } = {}) {
+  static async post(
+    url,
+    data,
+    { sendToken = true, expand, Model = null } = {}
+  ) {
     return ApiService.send(url, {
       data: ApiService.convertDataToBackendFormat(data),
       sendToken,
       method: 'POST',
       expand,
+      Model,
     })
   }
 
@@ -28,14 +34,20 @@ export class ApiService {
    * @param data
    * @param sendToken
    * @param expand
+   * @param Model
    * @returns {Promise<*>}
    */
-  static async patch(url, data, { sendToken = true, expand } = {}) {
+  static async patch(
+    url,
+    data,
+    { sendToken = true, expand, Model = null } = {}
+  ) {
     return ApiService.send(url, {
       data: ApiService.convertDataToBackendFormat(data),
       sendToken,
       method: 'PATCH',
       expand,
+      Model,
     })
   }
 
@@ -43,10 +55,16 @@ export class ApiService {
    * @public
    * @param url
    * @param expand
+   * @param Model
    * @returns {Promise<*>}
    */
-  static async get(url, { expand } = {}) {
-    return ApiService.send(url, { sendToken: true, method: 'GET', expand })
+  static async get(url, { expand, Model = null } = {}) {
+    return ApiService.send(url, {
+      sendToken: true,
+      method: 'GET',
+      expand,
+      Model,
+    })
   }
 
   /**
@@ -56,9 +74,10 @@ export class ApiService {
    * @param sendToken
    * @param method
    * @param expand
+   * @param Model
    * @returns {Promise<*>}
    */
-  static async send(url, { data, sendToken, method, expand }) {
+  static async send(url, { data, sendToken, method, expand, Model = null }) {
     const urlParams = new URLSearchParams()
     if (expand) {
       const expandString = castArray(expand).join(',')
@@ -76,7 +95,7 @@ export class ApiService {
       fetch(ApiService.createFullUrl(url, urlParams), options),
       10000
     )
-    return ApiService.processResponse(response)
+    return ApiService.processResponse(response, Model)
   }
 
   /**
@@ -118,9 +137,10 @@ export class ApiService {
   /**
    * @private
    * @param response
+   * @param Model
    * @returns {Promise<*>}
    */
-  static async processResponse(response) {
+  static async processResponse(response, Model = null) {
     if (response.status >= 500 && response.status < 600) {
       throw new Error('Внутренняя ошибка сервера')
     }
@@ -136,7 +156,7 @@ export class ApiService {
       }
       throw new Error('Неизвестная ошибка приложения')
     }
-    return ApiService.convertDataToFrontendFormat(json)
+    return ApiService.convertDataToFrontendFormat(json, Model)
   }
 
   /**
@@ -151,10 +171,15 @@ export class ApiService {
   /**
    * @private
    * @param {Object} data
+   * @param Model
    * @returns {Object}
    */
-  static convertDataToFrontendFormat(data) {
-    return toCamel(data)
+  static convertDataToFrontendFormat(data, Model = null) {
+    const camelCased = toCamel(data)
+    if (Model) {
+      return Model.fromObject(camelCased)
+    }
+    return camelCased
   }
 
   /**
