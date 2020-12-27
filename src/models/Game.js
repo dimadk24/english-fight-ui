@@ -1,6 +1,7 @@
 import { createModel } from '../core/model-utils'
 import tcomb from 'tcomb'
 import { Question } from './Question'
+import { ID } from '../core/tcomb-types'
 
 const expandableQuestion = tcomb.union([Question, tcomb.Number])
 expandableQuestion.dispatch = (x) => {
@@ -9,7 +10,7 @@ expandableQuestion.dispatch = (x) => {
 }
 
 const props = {
-  id: tcomb.Number,
+  id: ID,
   questions: tcomb.list(expandableQuestion),
   points: tcomb.Number,
 }

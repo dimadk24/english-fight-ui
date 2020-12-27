@@ -1,9 +1,9 @@
 import { createModel } from '../core/model-utils'
 import tcomb from 'tcomb'
-import { Null } from '../core/tcomb-types'
+import { ID, Null } from '../core/tcomb-types'
 
 const props = {
-  id: tcomb.Number,
+  id: ID,
   questionWord: tcomb.String,
   answerWords: tcomb.list(tcomb.String),
   correctAnswer: tcomb.union([Null, tcomb.String]),
