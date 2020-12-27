@@ -1,14 +1,14 @@
 import { createModel } from './model-utils'
 import tcomb from 'tcomb'
+import { ID, PositiveNumber } from './tcomb-types'
 
 const props = {
-  id: tcomb.Number,
-  vkId: tcomb.Number,
-  //  positive number
+  id: ID,
+  vkId: ID,
   firstName: tcomb.String,
   lastName: tcomb.String,
   photoUrl: tcomb.String,
-  score: tcomb.Number,
+  score: PositiveNumber,
 }
 
 export class User extends createModel(props, 'User') {}
