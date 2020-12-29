@@ -9,10 +9,10 @@ expandableQuestion.dispatch = (x) => {
   return Question
 }
 
-const props = {
+const attributes = {
   id: ID,
   questions: tcomb.list(expandableQuestion),
   points: tcomb.Number,
 }
 
-export class Game extends createModel(props, 'Game') {}
+export class Game extends createModel(attributes, 'Game') {}

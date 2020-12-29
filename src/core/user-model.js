@@ -2,7 +2,7 @@ import { createModel } from './model-utils'
 import tcomb from 'tcomb'
 import { ID, PositiveNumber } from './tcomb-types'
 
-const props = {
+const attributes = {
   id: ID,
   vkId: ID,
   firstName: tcomb.String,
@@ -11,4 +11,4 @@ const props = {
   score: PositiveNumber,
 }
 
-export class User extends createModel(props, 'User') {}
+export class User extends createModel(attributes, 'User') {}
