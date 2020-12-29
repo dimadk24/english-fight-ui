@@ -2,7 +2,7 @@ import { createModel } from '../core/model-utils'
 import tcomb from 'tcomb'
 import { ID, Null } from '../core/tcomb-types'
 
-const props = {
+const attributes = {
   id: ID,
   questionWord: tcomb.String,
   answerWords: tcomb.list(tcomb.String),
@@ -11,4 +11,4 @@ const props = {
   isCorrect: tcomb.Boolean,
 }
 
-export class Question extends createModel(props, 'Question') {}
+export class Question extends createModel(attributes, 'Question') {}

@@ -17,13 +17,13 @@ function set(key, value) {
 
 /**
  * Creates tcomb model
- * @param {Object} props
+ * @param {Object} attributes
  * @param {String} name
  * @param {Object} defaultProps
  * @returns {Class}
  */
-export const createModel = (props, name, defaultProps = {}) => {
-  const Model = struct(props, {
+export const createModel = (attributes, name, defaultProps = {}) => {
+  const Model = struct(attributes, {
     strict: true,
     name,
     defaultProps,
