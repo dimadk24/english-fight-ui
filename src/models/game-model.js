@@ -1,6 +1,6 @@
 import { createModel } from '../core/model-utils'
 import tcomb from 'tcomb'
-import { Question } from './Question'
+import { Question } from './question-model'
 import { ID } from '../core/tcomb-types'
 
 const expandableQuestion = tcomb.union([Question, tcomb.Number])

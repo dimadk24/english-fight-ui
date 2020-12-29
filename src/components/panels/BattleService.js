@@ -1,6 +1,6 @@
 import { ApiService } from '../../core/ApiService'
-import { Game } from '../../models/Game'
-import { Question } from '../../models/Question'
+import { Game } from '../../models/game-model'
+import { Question } from '../../models/question-model'
 
 export class BattleService {
   static async startBattle() {

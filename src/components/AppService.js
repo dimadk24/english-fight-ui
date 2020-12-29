@@ -1,6 +1,6 @@
 import bridge from '@vkontakte/vk-bridge'
 import { ApiService } from '../core/ApiService'
-import { User } from '../core/User'
+import { User } from '../core/user-model'
 
 export class AppService {
   static async fetchUserData() {
