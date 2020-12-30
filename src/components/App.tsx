@@ -15,9 +15,10 @@ import { Utils } from '../Utils'
 import * as Sentry from '@sentry/react'
 import './App.css'
 
-const App = () => {
+const App = (): JSX.Element => {
   const [activePanel, setActivePanel] = useState('home')
   const [fetchedUser, setUser] = useState(null)
+  // @ts-ignore
   const [popout, setPopout] = useState(<ScreenSpinner size="large" />)
   const [battle, setBattle] = useState(null)
 
@@ -25,6 +26,7 @@ const App = () => {
     bridge.subscribe(({ detail: { type, data } }) => {
       if (type === 'VKWebAppUpdateConfig') {
         const schemeAttribute = document.createAttribute('scheme')
+        // @ts-ignore
         schemeAttribute.value = data.scheme ? data.scheme : 'client_light'
         document.body.attributes.setNamedItem(schemeAttribute)
       }
@@ -38,13 +40,17 @@ const App = () => {
         beforeSend(event, hint) {
           if (event.exception) {
             const errorMessage =
-              hint && hint.originalException && hint.originalException.message
+              hint &&
+              hint.originalException &&
+              hint.originalException instanceof Error &&
+              hint.originalException.message
                 ? hint.originalException.message
                 : ''
             setPopout(
               <Alert
                 actions={[
                   {
+                    mode: 'default',
                     title: 'ОК',
                     autoclose: true,
                   },

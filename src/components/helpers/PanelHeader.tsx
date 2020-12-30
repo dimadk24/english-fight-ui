@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import PropTypes, { InferProps } from 'prop-types'
 import {
   PanelHeaderButton,
   PanelHeader as VKPanelHeader,
@@ -11,8 +11,8 @@ export default function PanelHeader({
   onBackButtonClick,
   text,
   showBackButton,
-}) {
-  const vkPanelHeaderProps = panelHeaderProps
+}: InferProps<typeof PanelHeader.propTypes>): JSX.Element {
+  const vkPanelHeaderProps = { ...panelHeaderProps }
   if (showBackButton)
     vkPanelHeaderProps.left = (
       <PanelHeaderButton onClick={onBackButtonClick}>
@@ -26,8 +26,9 @@ export default function PanelHeader({
 PanelHeader.propTypes = {
   onBackButtonClick: PropTypes.func,
   text: PropTypes.string.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  panelHeaderProps: PropTypes.object,
+  panelHeaderProps: PropTypes.shape({
+    left: PropTypes.node,
+  }),
   showBackButton: PropTypes.bool,
 }
 

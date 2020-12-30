@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import PropTypes, { InferProps } from 'prop-types'
 import * as Sentry from '@sentry/react'
 import Button from '@vkontakte/vkui/dist/components/Button/Button'
 import { Utils } from '../Utils'
@@ -8,7 +8,9 @@ import { Utils } from '../Utils'
  * Component catches only errors in rendering phase and lifecycle
  * Error in click and async handlers need to be caught and rendered separately
  */
-export function ErrorBoundary({ children }) {
+export function ErrorBoundary({
+  children,
+}: InferProps<typeof ErrorBoundary.propTypes>): JSX.Element {
   if (!Utils.isProductionMode) return children
 
   return (
@@ -28,5 +30,5 @@ export function ErrorBoundary({ children }) {
 }
 
 ErrorBoundary.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.element.isRequired,
 }

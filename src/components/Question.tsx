@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import PropTypes, { InferProps } from 'prop-types'
 import Div from '@vkontakte/vkui/dist/components/Div/Div'
 import Button from '@vkontakte/vkui/dist/components/Button/Button'
 import './Question.css'
@@ -12,7 +12,7 @@ function Question({
   isCorrect,
   correctAnswer,
   onSelectAnswer,
-}) {
+}: InferProps<typeof Question.propTypes>): JSX.Element {
   return (
     <Div>
       <p>Слово на английском: {questionWord}</p>

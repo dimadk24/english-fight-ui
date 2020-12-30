@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import PropTypes, { InferProps } from 'prop-types'
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel'
 import PanelHeader from '../helpers/PanelHeader'
 import Cell from '@vkontakte/vkui/dist/components/Cell/Cell'
@@ -11,7 +11,12 @@ import './Results.css'
 import Icon24Home from '@vkontakte/icons/dist/24/home'
 import Icon24Replay from '@vkontakte/icons/dist/24/replay'
 
-function Results({ id, onGoBack, battle, onRetry }) {
+function Results({
+  id,
+  onGoBack,
+  battle,
+  onRetry,
+}: InferProps<typeof Results.propTypes>): JSX.Element {
   const { questions, points } = battle
   const correctAnswersNumber = questions.filter(({ isCorrect }) => isCorrect)
     .length

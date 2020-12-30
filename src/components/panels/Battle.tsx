@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState } from 'react'
-import PropTypes from 'prop-types'
+import PropTypes, { InferProps } from 'prop-types'
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel'
 import PanelHeader from '../helpers/PanelHeader'
 import { BattleService } from './BattleService'
@@ -8,7 +8,11 @@ import { PanelSpinner } from '@vkontakte/vkui'
 import { Utils } from '../../Utils'
 import { battleActions, battleReducer, initialState } from './battle-reducer'
 
-const Battle = ({ id: panelId, onGoBack, onFinishGame }) => {
+const Battle = ({
+  id: panelId,
+  onGoBack,
+  onFinishGame,
+}: InferProps<typeof Battle.propTypes>): JSX.Element => {
   const [loading, setLoading] = useState(false)
   const [state, dispatch] = useReducer(battleReducer, initialState)
   const { battle, activeQuestion, hasNextQuestion } = state

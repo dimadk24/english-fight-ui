@@ -1,7 +1,7 @@
 import 'core-js/features/map'
 import 'core-js/features/set'
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render as renderReact } from 'react-dom'
 import bridge from '@vkontakte/vk-bridge'
 import App from './components/App'
 import { Utils } from './Utils'
@@ -11,7 +11,7 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 bridge.send('VKWebAppInit')
 
 function render() {
-  ReactDOM.render(
+  renderReact(
     <React.StrictMode>
       <ErrorBoundary>
         <App />
