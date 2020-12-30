@@ -1,25 +1,19 @@
 import { timeout } from 'promise-timeout'
 import { toCamel, toSnake } from 'convert-keys'
 import castArray from 'lodash.castarray'
+import { ModelType } from './model-utils'
 
 const API_URL = process.env.REACT_APP_API_URL
 
+type Data = Record<string, unknown>
+
 export class ApiService {
-  /**
-   * @public
-   * @param url
-   * @param data
-   * @param sendToken
-   * @param expand
-   * @param Model
-   * @returns {Promise<*>}
-   */
-  static async post(
-    url,
-    data,
-    { sendToken = true, expand, Model = null } = {}
-  ) {
-    return ApiService.send(url, {
+  static async post<T>(
+    url: string,
+    data: Data,
+    { sendToken = true, expand = '', Model = null } = {}
+  ): Promise<T> {
+    return ApiService.send<T>(url, {
       data: ApiService.convertDataToBackendFormat(data),
       sendToken,
       method: 'POST',
@@ -28,21 +22,12 @@ export class ApiService {
     })
   }
 
-  /**
-   * @public
-   * @param url
-   * @param data
-   * @param sendToken
-   * @param expand
-   * @param Model
-   * @returns {Promise<*>}
-   */
-  static async patch(
-    url,
-    data,
-    { sendToken = true, expand, Model = null } = {}
-  ) {
-    return ApiService.send(url, {
+  static async patch<T>(
+    url: string,
+    data: Data,
+    { sendToken = true, expand = '', Model = null } = {}
+  ): Promise<T> {
+    return ApiService.send<T>(url, {
       data: ApiService.convertDataToBackendFormat(data),
       sendToken,
       method: 'PATCH',
@@ -51,15 +36,11 @@ export class ApiService {
     })
   }
 
-  /**
-   * @public
-   * @param url
-   * @param expand
-   * @param Model
-   * @returns {Promise<*>}
-   */
-  static async get(url, { expand, Model = null } = {}) {
-    return ApiService.send(url, {
+  static async get<T>(
+    url: string,
+    { expand = '', Model = null } = {}
+  ): Promise<T> {
+    return ApiService.send<T>(url, {
       sendToken: true,
       method: 'GET',
       expand,
@@ -67,23 +48,28 @@ export class ApiService {
     })
   }
 
-  /**
-   * @private
-   * @param url
-   * @param data
-   * @param sendToken
-   * @param method
-   * @param expand
-   * @param Model
-   * @returns {Promise<*>}
-   */
-  static async send(url, { data, sendToken, method, expand, Model = null }) {
+  static async send<T>(
+    url: string,
+    {
+      data,
+      sendToken,
+      method,
+      expand,
+      Model = null,
+    }: {
+      data?: Data
+      sendToken: boolean
+      method: string
+      expand?: string
+      Model?: ModelType<unknown>
+    }
+  ): Promise<T> {
     const urlParams = new URLSearchParams()
     if (expand) {
       const expandString = castArray(expand).join(',')
       urlParams.append('expand', expandString)
     }
-    const options = {
+    const options: RequestInit = {
       headers: ApiService.createHeaders({ sendToken }),
     }
     if (method !== 'GET') {
@@ -95,16 +81,13 @@ export class ApiService {
       fetch(ApiService.createFullUrl(url, urlParams), options),
       10000
     )
-    return ApiService.processResponse(response, Model)
+    return ApiService.processResponse<T>(response, Model)
   }
 
-  /**
-   * @private
-   * @param sendToken
-   * @returns {{Accept: string, "Content-Type": string}}
-   */
-  static createHeaders({ sendToken } = {}) {
-    const headers = {
+  static createHeaders({
+    sendToken,
+  }: { sendToken?: boolean } = {}): HeadersInit {
+    const headers: HeadersInit = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     }
@@ -114,18 +97,15 @@ export class ApiService {
     return headers
   }
 
-  static getAuthorizationHeader() {
+  static getAuthorizationHeader(): string {
     const queryString = window.location.search.slice(1)
     return `QueryString ${queryString}`
   }
 
-  /**
-   * @public
-   * @param relativeUrl
-   * @param queryParams
-   * @returns {string}
-   */
-  static createFullUrl(relativeUrl, queryParams) {
+  static createFullUrl(
+    relativeUrl: string,
+    queryParams: URLSearchParams
+  ): string {
     const domain = ApiService.removeTrailingSlash(API_URL)
     let url = `${domain}/${relativeUrl}`
     if (queryParams && String(queryParams)) {
@@ -134,17 +114,16 @@ export class ApiService {
     return url
   }
 
-  /**
-   * @private
-   * @param response
-   * @param Model
-   * @returns {Promise<*>}
-   */
-  static async processResponse(response, Model = null) {
+  static async processResponse<T>(
+    response: Response,
+    Model: ModelType<unknown> = null
+  ): Promise<T> {
     if (response.status >= 500 && response.status < 600) {
       throw new Error('Внутренняя ошибка сервера')
     }
-    let json
+    let json: {
+      detail?: string
+    }
     try {
       json = await response.json()
     } catch (e) {
@@ -156,38 +135,22 @@ export class ApiService {
       }
       throw new Error('Неизвестная ошибка приложения')
     }
-    return ApiService.convertDataToFrontendFormat(json, Model)
+    return ApiService.convertDataToFrontendFormat<T>(json, Model)
   }
 
-  /**
-   * @private
-   * @param {Object} data
-   * @returns {Object}
-   */
-  static convertDataToBackendFormat(data) {
+  static convertDataToBackendFormat(data: Data): Data {
     return toSnake(data)
   }
 
-  /**
-   * @private
-   * @param {Object} data
-   * @param Model
-   * @returns {Object}
-   */
-  static convertDataToFrontendFormat(data, Model = null) {
-    const camelCased = toCamel(data)
+  static convertDataToFrontendFormat<T>(data: Data, Model = null): T {
+    const camelCased: T = toCamel(data)
     if (Model) {
       return Model.fromObject(camelCased)
     }
     return camelCased
   }
 
-  /**
-   * @private
-   * @param url
-   * @returns {any}
-   */
-  static removeTrailingSlash(url) {
+  static removeTrailingSlash(url: string): string {
     return url.endsWith('/') ? url.slice(0, -1) : url
   }
 }

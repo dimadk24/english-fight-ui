@@ -1,14 +1,17 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
     es6: true,
   },
   extends: [
     'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
     'plugin:react/recommended',
     'plugin:jsx-a11y/recommended',
-    'airbnb',
+    'airbnb-typescript',
+    'prettier/@typescript-eslint',
     'plugin:prettier/recommended',
     'plugin:jest/recommended',
     'plugin:jest-formatting/recommended',
@@ -17,7 +20,7 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
-  parser: 'babel-eslint',
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -25,8 +28,16 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
     allowImportExportEverywhere: true,
+    project: './tsconfig.json',
   },
-  plugins: ['react', 'react-hooks', 'jest', 'jest-formatting', 'jsx-a11y'],
+  plugins: [
+    '@typescript-eslint',
+    'react',
+    'react-hooks',
+    'jest',
+    'jest-formatting',
+    'jsx-a11y',
+  ],
   rules: {
     'max-len': [
       'error',
@@ -40,8 +51,18 @@ module.exports = {
     ],
     // just cause non-default exports are awesome
     'import/prefer-default-export': 'off',
-    'jest-formatting/padding-around-expect-groups': 'off',
     'import/order': 'off',
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
+    'jest-formatting/padding-around-expect-groups': 'off',
     'consistent-return': 'off',
     //  we allow 0 warnings, so don't think prettier rules are ignored
     // this is only to show prettier issues as warnings, not errors
@@ -69,11 +90,15 @@ module.exports = {
       'error',
       { declaration: false, assignment: false },
     ],
+    'react/jsx-props-no-spreading': 'off',
     'jsx-a11y/anchor-has-content': [
       2,
       {
         components: ['Link'],
       },
     ],
+
+    // typescript
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
 }

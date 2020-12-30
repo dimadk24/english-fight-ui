@@ -66,6 +66,7 @@ describe('battleReducer', () => {
           id: 2,
           questionWord: 'cat',
         },
+        hasNextQuestion: true,
       }
       const action = {
         type: battleActions.updateQuestion,
@@ -97,6 +98,7 @@ describe('battleReducer', () => {
           id: 2,
           questionWord: 'dog',
         },
+        hasNextQuestion: true,
       }
       expect(actual).toEqual(expected)
     })
@@ -226,6 +228,7 @@ describe('battleReducer', () => {
           id: 2,
           questionWord: 'dog',
         },
+        hasNextQuestion: false,
       }
       const action = {
         type: battleActions.goToNextQuestion,

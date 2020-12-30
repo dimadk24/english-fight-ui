@@ -1,6 +1,6 @@
-import { createModel } from '../core/model-utils'
+import { createModel, ModelInstance } from '../core/model-utils'
 import tcomb from 'tcomb'
-import { Question } from './question-model'
+import { Question, QuestionInstance } from './question-model'
 import { ID } from '../core/tcomb-types'
 
 const expandableQuestion = tcomb.union([Question, tcomb.Number])
@@ -15,4 +15,10 @@ const attributes = {
   points: tcomb.Number,
 }
 
-export class Game extends createModel(attributes, 'Game') {}
+export interface GameInstance extends ModelInstance {
+  id: number
+  questions: QuestionInstance[]
+  points: number
+}
+
+export class Game extends createModel<GameInstance>(attributes, 'Game') {}

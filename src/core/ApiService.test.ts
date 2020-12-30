@@ -20,10 +20,6 @@ describe('ApiService', () => {
       ApiService.removeTrailingSlash = jest.fn(() => 'https://vk.com')
     })
 
-    it('creates url without search params if only url was passed', () => {
-      expect(ApiService.createFullUrl('test')).toBe('https://vk.com/test')
-    })
-
     it('creates url without search params if empty search params were passed', () => {
       expect(ApiService.createFullUrl('akani', new URLSearchParams())).toBe(
         'https://vk.com/akani'

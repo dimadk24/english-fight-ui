@@ -1,13 +1,15 @@
 import { ApiService } from '../../core/ApiService'
-import { Game } from '../../models/game-model'
-import { Question } from '../../models/question-model'
+import { Game, GameInstance } from '../../models/game-model'
+import { Question, QuestionInstance } from '../../models/question-model'
 
 export class BattleService {
-  static async startBattle() {
+  static async startBattle(): Promise<GameInstance> {
     return ApiService.post('game', {}, { expand: 'questions', Model: Game })
   }
 
-  static async submitQuestion(question) {
+  static async submitQuestion(
+    question: QuestionInstance
+  ): Promise<QuestionInstance> {
     return ApiService.patch(
       `question/${question.id}`,
       {
@@ -17,7 +19,7 @@ export class BattleService {
     )
   }
 
-  static async getBattle(id) {
+  static async getBattle(id: number): Promise<GameInstance> {
     return ApiService.get(`game/${id}`, { expand: 'questions', Model: Game })
   }
 }

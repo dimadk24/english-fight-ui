@@ -1,3 +1,6 @@
+import { GameInstance } from '../../models/game-model'
+import { QuestionInstance } from '../../models/question-model'
+
 export const battleActions = {
   setBattle: 'setBattle',
   updateQuestion: 'updateQuestion',
@@ -10,7 +13,18 @@ export const initialState = {
   hasNextQuestion: false,
 }
 
-export function battleReducer(state = initialState, action) {
+export function battleReducer(
+  state = initialState,
+  action: {
+    type: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload?: any
+  }
+): {
+  battle: null | GameInstance
+  activeQuestion: null | QuestionInstance
+  hasNextQuestion: boolean
+} {
   switch (action.type) {
     case battleActions.setBattle: {
       const battle = action.payload
