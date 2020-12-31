@@ -18,8 +18,7 @@ import './App.css'
 const App = (): JSX.Element => {
   const [activePanel, setActivePanel] = useState('home')
   const [fetchedUser, setUser] = useState(null)
-  // @ts-ignore
-  const [popout, setPopout] = useState(<ScreenSpinner size="large" />)
+  const [popout, setPopout] = useState(<ScreenSpinner />)
   const [battle, setBattle] = useState(null)
 
   useEffect(() => {
