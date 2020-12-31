@@ -27,6 +27,5 @@ if (!Utils.isProductionMode) {
     module.hot.accept('./components/App', render)
   }
 
-  // eslint-disable-next-line no-unused-expressions
   import('./eruda')
 }
