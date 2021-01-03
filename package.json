@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.tsx",
+  "homepage": "/english-fight-ui/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

@@ -54,3 +54,53 @@ jobs:
 
       - name: Test with jest
         run: yarn test
+
+  build:
+    name: Build
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build production
+        run: yarn build
+
+  deploy:
+    name: Deploy prod
+    runs-on: ubuntu-18.04
+    if: github.ref == 'refs/heads/master'
+    needs: [ lint, types, test, build ]
+    env:
+      REACT_APP_API_URL: ${{secrets.REACT_APP_API_URL}}
+      REACT_APP_SENTRY_DSN: ${{secrets.REACT_APP_SENTRY_DSN}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build production
+        run: yarn build
+
+      - name: Deploy production
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: build
+          CLEAN: true
+
