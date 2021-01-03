@@ -1,0 +1,2 @@
+(this["webpackJsonpenglish-fight-ui"]=this["webpackJsonpenglish-fight-ui"]||[]).push([[4],{408:function(i,s,t){"use strict";t.r(s);var h=t(405),n=t(406),a=t(407);h.init(),h.add(n),h.add(a),s.default=h}}]);
+//# sourceMappingURL=4.2bb6f9ba.chunk.js.map
