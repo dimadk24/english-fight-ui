@@ -13,6 +13,7 @@ import { BattleService } from './panels/BattleService'
 import { Utils } from '../Utils'
 import * as Sentry from '@sentry/react'
 import './App.css'
+import { GameInstance } from '../models/game-model'
 
 const App = (): JSX.Element => {
   const [activePanel, setActivePanel] = useState('home')
@@ -71,7 +72,7 @@ const App = (): JSX.Element => {
     fetchData()
   }, [battle])
 
-  const onFinishGame = async (localBattle) => {
+  const onFinishGame = async (localBattle: GameInstance) => {
     const updatedBattle = await BattleService.getBattle(localBattle.id)
     setBattle(updatedBattle)
     setActivePanel('results')
