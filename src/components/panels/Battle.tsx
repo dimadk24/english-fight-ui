@@ -56,7 +56,7 @@ const Battle = ({
 
   return (
     <Panel id={panelId}>
-      <PanelHeader onBackButtonClick={onGoBack} text="Сражение" />
+      <PanelHeader onBackButtonClick={onGoBack} text="Игра" />
       {activeQuestion && (
         <Question {...activeQuestion} onSelectAnswer={onSelectAnswer} />
       )}

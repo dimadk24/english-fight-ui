@@ -23,7 +23,7 @@ function Results({
   const incorrectAnswersNumber = questions.length - correctAnswersNumber
   return (
     <Panel id={id}>
-      <PanelHeader text="Результаты сражения" onBackButtonClick={onGoBack} />
+      <PanelHeader text="Результаты" onBackButtonClick={onGoBack} />
       <Group header={<Header mode="secondary">Статистика</Header>}>
         <Cell
           indicator={<Counter mode="primary">{correctAnswersNumber}</Counter>}
