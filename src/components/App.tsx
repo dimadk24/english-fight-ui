@@ -14,6 +14,7 @@ import { Utils } from '../Utils'
 import * as Sentry from '@sentry/react'
 import './App.css'
 import { GameInstance } from '../models/game-model'
+import { initTracker, reachGoal } from '../core/tracker'
 
 const App = (): JSX.Element => {
   const [activePanel, setActivePanel] = useState('home')
@@ -56,8 +57,8 @@ const App = (): JSX.Element => {
           return event
         },
       })
-      Utils.initMetrika()
     }
+    initTracker()
   }, [])
 
   useEffect(() => {
@@ -76,11 +77,15 @@ const App = (): JSX.Element => {
     const updatedBattle = await BattleService.getBattle(localBattle.id)
     setBattle(updatedBattle)
     setActivePanel('results')
+    reachGoal('finish-game')
   }
 
   const goBack = () => setActivePanel('home')
 
-  const onStartBattle = () => setActivePanel('battle')
+  const onStartBattle = () => {
+    setActivePanel('battle')
+    reachGoal('start-game')
+  }
 
   return (
     <View activePanel={activePanel} popout={popout}>
