@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import bridge from '@vkontakte/vk-bridge'
 import View from '@vkontakte/vkui/dist/components/View/View'
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner'
 import Alert from '@vkontakte/vkui/dist/components/Alert/Alert'
@@ -20,17 +19,6 @@ const App = (): JSX.Element => {
   const [fetchedUser, setUser] = useState(null)
   const [popout, setPopout] = useState(<ScreenSpinner />)
   const [battle, setBattle] = useState(null)
-
-  useEffect(() => {
-    bridge.subscribe(({ detail: { type, data } }) => {
-      if (type === 'VKWebAppUpdateConfig') {
-        const schemeAttribute = document.createAttribute('scheme')
-        // @ts-ignore
-        schemeAttribute.value = data.scheme ? data.scheme : 'client_light'
-        document.body.attributes.setNamedItem(schemeAttribute)
-      }
-    })
-  }, [])
 
   useEffect(() => {
     if (Utils.isProductionMode) {
