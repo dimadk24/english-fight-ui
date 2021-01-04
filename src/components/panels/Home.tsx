@@ -14,7 +14,7 @@ const Home = ({
   fetchedUser,
 }: InferProps<typeof Home.propTypes>): JSX.Element => (
   <Panel id={id}>
-    <PanelHeader text="Language fight" showBackButton={false} />
+    <PanelHeader text="English Puzzle" showBackButton={false} />
     {fetchedUser && (
       <Group>
         <Cell
@@ -31,7 +31,7 @@ const Home = ({
     <Group>
       <Div>
         <Button size="xl" onClick={onStartBattle}>
-          Начать бой!
+          Начать!
         </Button>
       </Div>
     </Group>
