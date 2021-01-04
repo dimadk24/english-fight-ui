@@ -4,9 +4,9 @@ import Panel from '@vkontakte/vkui/dist/components/Panel/Panel'
 import PanelHeader from '../helpers/PanelHeader'
 import { BattleService } from './BattleService'
 import Question from '../Question'
-import { PanelSpinner } from '@vkontakte/vkui'
 import { Utils } from '../../Utils'
 import { battleActions, battleReducer, initialState } from './battle-reducer'
+import Loader from '../helpers/Loader'
 
 const Battle = ({
   id: panelId,
@@ -60,7 +60,7 @@ const Battle = ({
       {activeQuestion && (
         <Question {...activeQuestion} onSelectAnswer={onSelectAnswer} />
       )}
-      {loading && <PanelSpinner size="large" />}
+      {loading && <Loader />}
     </Panel>
   )
 }
