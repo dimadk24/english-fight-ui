@@ -8,6 +8,8 @@ import { Utils } from '../../Utils'
 import { battleActions, battleReducer, initialState } from './battle-reducer'
 import Loader from '../helpers/Loader'
 
+const WAIT_TIME_TO_SHOW_CORRECT_ANSWER = 1000
+
 const Battle = ({
   id: panelId,
   onGoBack,
@@ -48,7 +50,7 @@ const Battle = ({
       setLoading(false)
     }
 
-    await Utils.waitForTimeout(2000)
+    await Utils.waitForTimeout(WAIT_TIME_TO_SHOW_CORRECT_ANSWER)
 
     if (hasNextQuestion) dispatch({ type: battleActions.goToNextQuestion })
     else onFinishGame(battle)
