@@ -14,7 +14,7 @@ const Home = ({
   fetchedUser,
 }: InferProps<typeof Home.propTypes>): JSX.Element => (
   <Panel id={id}>
-    <PanelHeader text="English Puzzle" showBackButton={false} />
+    <PanelHeader text="English Clash" showBackButton={false} />
     {fetchedUser && (
       <Group>
         <Cell
