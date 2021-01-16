@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes, { InferProps } from 'prop-types'
-import Panel from '@vkontakte/vkui/dist/components/Panel/Panel'
 import Button from '@vkontakte/vkui/dist/components/Button/Button'
 import Group from '@vkontakte/vkui/dist/components/Group/Group'
 import Cell from '@vkontakte/vkui/dist/components/Cell/Cell'
@@ -9,21 +8,18 @@ import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar'
 import PanelHeader from '../helpers/PanelHeader'
 
 const Home = ({
-  id,
   onStartBattle,
-  fetchedUser,
+  user,
 }: InferProps<typeof Home.propTypes>): JSX.Element => (
-  <Panel id={id}>
+  <>
     <PanelHeader text="English Clash" showBackButton={false} />
-    {fetchedUser && (
+    {user && (
       <Group>
         <Cell
-          before={
-            fetchedUser.photoUrl ? <Avatar src={fetchedUser.photoUrl} /> : null
-          }
-          description={`Количество очков - ${fetchedUser.score}`}
+          before={user.photoUrl ? <Avatar src={user.photoUrl} /> : null}
+          description={`Количество очков - ${user.score}`}
         >
-          {`${fetchedUser.firstName} ${fetchedUser.lastName}`}
+          {`${user.firstName} ${user.lastName}`}
         </Cell>
       </Group>
     )}
@@ -35,13 +31,12 @@ const Home = ({
         </Button>
       </Div>
     </Group>
-  </Panel>
+  </>
 )
 
 Home.propTypes = {
-  id: PropTypes.string.isRequired,
   onStartBattle: PropTypes.func.isRequired,
-  fetchedUser: PropTypes.shape({
+  user: PropTypes.shape({
     photoUrl: PropTypes.string.isRequired,
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
@@ -50,7 +45,7 @@ Home.propTypes = {
 }
 
 Home.defaultProps = {
-  fetchedUser: null,
+  user: null,
 }
 
 export default Home
