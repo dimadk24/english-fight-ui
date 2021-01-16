@@ -1,6 +1,5 @@
 import React, { useEffect, useReducer, useState } from 'react'
 import PropTypes, { InferProps } from 'prop-types'
-import Panel from '@vkontakte/vkui/dist/components/Panel/Panel'
 import PanelHeader from '../helpers/PanelHeader'
 import { BattleService } from './BattleService'
 import Question from '../Question'
@@ -11,7 +10,6 @@ import Loader from '../helpers/Loader'
 const WAIT_TIME_TO_SHOW_CORRECT_ANSWER = 1000
 
 const Battle = ({
-  id: panelId,
   onGoBack,
   onFinishGame,
 }: InferProps<typeof Battle.propTypes>): JSX.Element => {
@@ -57,18 +55,17 @@ const Battle = ({
   }
 
   return (
-    <Panel id={panelId}>
+    <>
       <PanelHeader onBackButtonClick={onGoBack} text="Игра" />
       {activeQuestion && (
         <Question {...activeQuestion} onSelectAnswer={onSelectAnswer} />
       )}
       {loading && <Loader />}
-    </Panel>
+    </>
   )
 }
 
 Battle.propTypes = {
-  id: PropTypes.string.isRequired,
   onGoBack: PropTypes.func.isRequired,
   onFinishGame: PropTypes.func.isRequired,
   user: PropTypes.shape({

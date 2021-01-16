@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes, { InferProps } from 'prop-types'
-import Panel from '@vkontakte/vkui/dist/components/Panel/Panel'
 import PanelHeader from '../helpers/PanelHeader'
 import Cell from '@vkontakte/vkui/dist/components/Cell/Cell'
 import Counter from '@vkontakte/vkui/dist/components/Counter/Counter'
@@ -12,7 +11,6 @@ import Icon24Home from '@vkontakte/icons/dist/24/home'
 import Icon24Replay from '@vkontakte/icons/dist/24/replay'
 
 function Results({
-  id,
   onGoBack,
   battle,
   onRetry,
@@ -22,7 +20,7 @@ function Results({
     .length
   const incorrectAnswersNumber = questions.length - correctAnswersNumber
   return (
-    <Panel id={id}>
+    <>
       <PanelHeader text="Результаты" onBackButtonClick={onGoBack} />
       <Group header={<Header mode="secondary">Статистика</Header>}>
         <Cell
@@ -47,12 +45,11 @@ function Results({
           Еще раз
         </Button>
       </div>
-    </Panel>
+    </>
   )
 }
 
 Results.propTypes = {
-  id: PropTypes.string.isRequired,
   onGoBack: PropTypes.func.isRequired,
   onRetry: PropTypes.func.isRequired,
   battle: PropTypes.shape({

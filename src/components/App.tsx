@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import View from '@vkontakte/vkui/dist/components/View/View'
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner'
 import Alert from '@vkontakte/vkui/dist/components/Alert/Alert'
 import '@vkontakte/vkui/dist/vkui.css'
-
-import Home from './panels/Home'
 import { AppService } from './AppService'
-import Battle from './panels/Battle'
 import './constant-styles.css'
-import Results from './panels/Results'
-import { BattleService } from './panels/BattleService'
 import { Utils } from '../Utils'
 import * as Sentry from '@sentry/react'
 import './App.css'
-import { GameInstance } from '../models/game-model'
 import { initTracker, reachGoal } from '../core/tracker'
+import { Epic, Panel, Tabbar, TabbarItem, View } from '@vkontakte/vkui'
+import { GameInstance } from '../models/game-model'
+import { BattleService } from './panels/BattleService'
+import Home from './panels/Home'
+import Battle from './panels/Battle'
+import Results from './panels/Results'
+import { Icon28Game, Icon28UsersOutline } from '@vkontakte/icons'
 
 const App = (): JSX.Element => {
-  const [activePanel, setActivePanel] = useState('home')
-  const [fetchedUser, setUser] = useState(null)
+  const [user, setUser] = useState(null)
   const [popout, setPopout] = useState(<ScreenSpinner />)
+  const [activeStory, setActiveStory] = useState('game')
+  const [activePanel, setActivePanel] = useState('home')
   const [battle, setBattle] = useState(null)
 
   useEffect(() => {
@@ -61,26 +62,28 @@ const App = (): JSX.Element => {
     initTracker()
   }, [])
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const user = await AppService.fetchUserData()
-        setUser(user)
-      } finally {
-        setPopout(null)
-      }
+  async function fetchUser() {
+    try {
+      const fetchedUser = await AppService.fetchUserData()
+      setUser(fetchedUser)
+    } finally {
+      setPopout(null)
     }
-    fetchData()
-  }, [battle])
+  }
+
+  useEffect(() => {
+    fetchUser()
+  }, [])
 
   const onFinishGame = async (localBattle: GameInstance) => {
     const updatedBattle = await BattleService.getBattle(localBattle.id)
     setBattle(updatedBattle)
     setActivePanel('results')
     reachGoal('finish-game')
+    fetchUser()
   }
 
-  const goBack = () => setActivePanel('home')
+  const goToHomePanel = () => setActivePanel('home')
 
   const onStartBattle = () => {
     setActivePanel('battle')
@@ -88,21 +91,56 @@ const App = (): JSX.Element => {
   }
 
   return (
-    <View activePanel={activePanel} popout={popout}>
-      <Home id="home" fetchedUser={fetchedUser} onStartBattle={onStartBattle} />
-      <Battle
-        id="battle"
-        onGoBack={goBack}
-        user={fetchedUser}
-        onFinishGame={onFinishGame}
-      />
-      <Results
-        id="results"
-        onGoBack={goBack}
-        onRetry={onStartBattle}
-        battle={battle}
-      />
-    </View>
+    <Epic
+      activeStory={activeStory}
+      tabbar={
+        <Tabbar>
+          <TabbarItem
+            text="Игра"
+            selected={activeStory === 'game'}
+            onClick={() => {
+              setActiveStory('game')
+              setActivePanel('home')
+            }}
+          >
+            <Icon28Game />
+          </TabbarItem>
+          <TabbarItem
+            text="Рейтинг"
+            selected={activeStory === 'scoreboard'}
+            onClick={() => {
+              setActiveStory('scoreboard')
+              setActivePanel('scoreboard-home')
+            }}
+          >
+            <Icon28UsersOutline />
+          </TabbarItem>
+        </Tabbar>
+      }
+    >
+      <View id="game" activePanel={activePanel} popout={popout}>
+        <Panel id="home">
+          <Home user={user} onStartBattle={onStartBattle} />
+        </Panel>
+        <Panel id="battle">
+          <Battle
+            onGoBack={goToHomePanel}
+            user={user}
+            onFinishGame={onFinishGame}
+          />
+        </Panel>
+        <Panel id="results">
+          <Results
+            onRetry={onStartBattle}
+            onGoBack={goToHomePanel}
+            battle={battle}
+          />
+        </Panel>
+      </View>
+      <View id="scoreboard" activePanel={activePanel} popout={popout}>
+        <Panel id="scoreboard-home">scoreboard</Panel>
+      </View>
+    </Epic>
   )
 }
 
