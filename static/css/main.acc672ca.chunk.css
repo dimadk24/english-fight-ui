@@ -1,0 +1,2 @@
+:root{--success-color:#4bb34b;--failure-color:#eb4250}.Alert__content p.error-message{font-size:larger;margin:15px 0}.answer-button{margin-top:10px}.answer-button.correct{background:var(--success-color)}.answer-button.failure{background:var(--failure-color)}.home-button-wrapper{display:flex;justify-content:center;margin-top:24px}.home-button-wrapper>:first-child{margin-right:32px}.scoreboard-item{display:flex;margin:0 12px;align-items:center}.scoreboard-item-name{margin:0 16px}
+/*# sourceMappingURL=main.acc672ca.chunk.css.map */
