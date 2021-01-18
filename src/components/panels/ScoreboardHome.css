@@ -1,0 +1,9 @@
+.scoreboard-item {
+  display: flex;
+  margin: 0 12px;
+  align-items: center;
+}
+
+.scoreboard-item-name {
+  margin: 0 16px;
+}
