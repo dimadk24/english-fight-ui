@@ -41,6 +41,8 @@ Home.propTypes = {
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     score: PropTypes.number.isRequired,
+    foreverRank: PropTypes.number.isRequired,
+    monthlyRank: PropTypes.number.isRequired,
   }),
 }
 
