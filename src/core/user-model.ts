@@ -9,6 +9,8 @@ const attributes = {
   lastName: tcomb.String,
   photoUrl: tcomb.String,
   score: PositiveNumber,
+  foreverRank: PositiveNumber,
+  monthlyRank: PositiveNumber,
 }
 
 export interface UserInstance extends ModelInstance {
@@ -18,6 +20,8 @@ export interface UserInstance extends ModelInstance {
   lastName: string
   photoUrl: string
   score: number
+  foreverRank: number
+  monthlyRank: number
 }
 
 export class User extends createModel<UserInstance>(attributes, 'User') {}
