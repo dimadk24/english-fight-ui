@@ -17,7 +17,13 @@ const Home = ({
       <Group>
         <Cell
           before={user.photoUrl ? <Avatar src={user.photoUrl} /> : null}
-          description={`Количество очков - ${user.score}, место в рейтинге: ${user.foreverRank}`}
+          description={
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span>Количество очков - {user.score}</span>{' '}
+              <span>место в рейтинге: {user.foreverRank}</span>
+            </div>
+          }
+          multiline
         >
           {`${user.firstName} ${user.lastName}`}
         </Cell>
