@@ -15,6 +15,7 @@ import Home from './panels/Home'
 import Battle from './panels/Battle'
 import Results from './panels/Results'
 import { Icon28Game, Icon28UsersOutline } from '@vkontakte/icons'
+import ScoreboardHome from './panels/ScoreboardHome'
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState(null)
@@ -90,6 +91,11 @@ const App = (): JSX.Element => {
     reachGoal('start-game')
   }
 
+  const onOpenScoreboard = () => {
+    setActiveStory('scoreboard')
+    setActivePanel('scoreboard-home')
+  }
+
   return (
     <Epic
       activeStory={activeStory}
@@ -108,10 +114,7 @@ const App = (): JSX.Element => {
           <TabbarItem
             text="Рейтинг"
             selected={activeStory === 'scoreboard'}
-            onClick={() => {
-              setActiveStory('scoreboard')
-              setActivePanel('scoreboard-home')
-            }}
+            onClick={onOpenScoreboard}
           >
             <Icon28UsersOutline />
           </TabbarItem>
@@ -138,7 +141,9 @@ const App = (): JSX.Element => {
         </Panel>
       </View>
       <View id="scoreboard" activePanel={activePanel} popout={popout}>
-        <Panel id="scoreboard-home">scoreboard</Panel>
+        <Panel id="scoreboard-home">
+          <ScoreboardHome user={user} />
+        </Panel>
       </View>
     </Epic>
   )
