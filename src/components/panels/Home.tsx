@@ -17,7 +17,7 @@ const Home = ({
       <Group>
         <Cell
           before={user.photoUrl ? <Avatar src={user.photoUrl} /> : null}
-          description={`Количество очков - ${user.score}`}
+          description={`Количество очков - ${user.score}, место в рейтинге: ${user.foreverRank}`}
         >
           {`${user.firstName} ${user.lastName}`}
         </Cell>
