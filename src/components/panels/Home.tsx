@@ -20,7 +20,7 @@ const Home = ({
           description={
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span>Количество очков - {user.score}</span>{' '}
-              <span>место в рейтинге: {user.foreverRank}</span>
+              <span>Место в рейтинге: {user.foreverRank}</span>
             </div>
           }
           multiline
