@@ -7,7 +7,7 @@ import './constant-styles.css'
 import { Utils } from '../Utils'
 import * as Sentry from '@sentry/react'
 import './App.css'
-import { initTracker, reachGoal } from '../core/tracker'
+import { tracker } from '../core/trackers/tracker'
 import { Epic, Panel, Tabbar, TabbarItem, View } from '@vkontakte/vkui'
 import { GameInstance } from '../models/game-model'
 import { BattleService } from './panels/BattleService'
@@ -64,7 +64,7 @@ const App = (): JSX.Element => {
         },
       })
     }
-    initTracker()
+    tracker.init()
   }, [])
 
   async function fetchUser(isInitialRequest: boolean) {
@@ -79,6 +79,7 @@ const App = (): JSX.Element => {
           setUser(await AppService.blockNotifications())
         }
       }
+      tracker.identify(fetchedUser.id, fetchedUser.vkId)
     } finally {
       setPopout(null)
     }
@@ -92,7 +93,7 @@ const App = (): JSX.Element => {
     const updatedBattle = await BattleService.getBattle(localBattle.id)
     setBattle(updatedBattle)
     setActivePanel('results')
-    reachGoal('finish-game')
+    tracker.reachGoal('finish-game')
     fetchUser(false)
   }
 
@@ -105,7 +106,7 @@ const App = (): JSX.Element => {
   const onStartBattle = (chosenGameType?: string) => {
     if (chosenGameType) setGameType(chosenGameType)
     setActivePanel('battle')
-    reachGoal('start-game')
+    tracker.reachGoal('start-game')
   }
 
   const onOpenScoreboard = () => {
