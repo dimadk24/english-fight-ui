@@ -37,7 +37,7 @@ function Results({
           Получено очков:
         </Cell>
       </Group>
-      <div className="home-button-wrapper">
+      <div className="action-buttons-wrapper">
         <Button onClick={onGoBack} size="l" before={<Icon24Home />}>
           Домой
         </Button>
