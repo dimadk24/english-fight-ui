@@ -4,6 +4,10 @@ import { NOTIFICATIONS_STATUSES } from '../constants'
 import bridge from '@vkontakte/vk-bridge'
 
 export class AppService {
+  static areNotificationsEnabledOnVkSide = Boolean(
+    parseInt(Utils.getSearchParam('vk_are_notifications_enabled'), 10)
+  )
+
   static async fetchUserData(): Promise<UserInstance> {
     return ApiService.get<UserInstance>('user', { Model: User })
   }
@@ -25,6 +29,10 @@ export class AppService {
   }
 
   static async requestNotifications(): Promise<UserInstance> {
+    if (AppService.areNotificationsEnabledOnVkSide) {
+      // already allowed in VK, need only to allow on our backend
+      return AppService.allowNotifications()
+    }
     try {
       const { result } = await bridge.send('VKWebAppAllowNotifications')
       if (result) return AppService.allowNotifications()
