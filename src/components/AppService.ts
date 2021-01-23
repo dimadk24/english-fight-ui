@@ -39,7 +39,14 @@ export class AppService {
       if (result) return AppService.allowNotifications()
     } catch (e) {
       // rejected
-      return AppService.blockNotifications()
+      if (
+        e.error_type === 'client_error' &&
+        e.error_data &&
+        e.error_data.error_code === 4 &&
+        e.error_data.error_reason === 'User denied'
+      )
+        return AppService.blockNotifications()
+      throw e
     }
   }
 
