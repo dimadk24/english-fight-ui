@@ -20,16 +20,19 @@ const Home = ({
   const onSwitchNotifications = async (event) => {
     const { checked: newChecked } = event.target
     setLoading(true)
-    let updatedUser: UserInstance
-    if (newChecked) {
-      // need to enable
-      updatedUser = await AppService.requestNotifications()
-    } else {
-      // need to disable
-      updatedUser = await AppService.blockNotifications()
+    try {
+      let updatedUser: UserInstance
+      if (newChecked) {
+        // need to enable
+        updatedUser = await AppService.requestNotifications()
+      } else {
+        // need to disable
+        updatedUser = await AppService.blockNotifications()
+      }
+      onUpdateUser(updatedUser)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
-    onUpdateUser(updatedUser)
   }
   return (
     <>
