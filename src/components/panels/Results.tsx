@@ -56,16 +56,19 @@ function Results({
               className="notification-button"
               onClick={async () => {
                 setLoading(true)
-                const updatedUser = await AppService.requestNotifications()
-                onUpdateUser(updatedUser)
-                if (
-                  updatedUser.notificationsStatus ===
-                  NOTIFICATIONS_STATUSES.BLOCK
-                ) {
-                  // if user clicked subscribe, but rejected in VK popup
-                  setRejectedNotifications(true)
+                try {
+                  const updatedUser = await AppService.requestNotifications()
+                  onUpdateUser(updatedUser)
+                  if (
+                    updatedUser.notificationsStatus ===
+                    NOTIFICATIONS_STATUSES.BLOCK
+                  ) {
+                    // if user clicked subscribe, but rejected in VK popup
+                    setRejectedNotifications(true)
+                  }
+                } finally {
+                  setLoading(false)
                 }
-                setLoading(false)
               }}
               disabled={loading}
             >
