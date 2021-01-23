@@ -49,6 +49,7 @@ Home.propTypes = {
     score: PropTypes.number.isRequired,
     foreverRank: PropTypes.number.isRequired,
     monthlyRank: PropTypes.number.isRequired,
+    notificationsStatus: PropTypes.string.isRequired,
   }),
 }
 

@@ -134,9 +134,11 @@ const App = (): JSX.Element => {
         </Panel>
         <Panel id="results">
           <Results
+            user={user}
             onRetry={onStartBattle}
             onGoBack={goToHomePanel}
             battle={battle}
+            onUpdateUser={(updatedUser) => setUser(updatedUser)}
           />
         </Panel>
       </View>

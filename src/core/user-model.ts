@@ -1,6 +1,7 @@
 import { createModel, ModelInstance } from './model-utils'
 import tcomb from 'tcomb'
 import { ID, PositiveNumber } from './tcomb-types'
+import { NOTIFICATIONS_STATUSES } from '../constants'
 
 const attributes = {
   id: ID,
@@ -11,6 +12,10 @@ const attributes = {
   score: PositiveNumber,
   foreverRank: PositiveNumber,
   monthlyRank: PositiveNumber,
+  notificationsStatus: tcomb.enums.of(
+    Object.values(NOTIFICATIONS_STATUSES),
+    'notificationsStatus'
+  ),
 }
 
 export interface UserInstance extends ModelInstance {
@@ -22,6 +27,7 @@ export interface UserInstance extends ModelInstance {
   score: number
   foreverRank: number
   monthlyRank: number
+  notificationsStatus: 'allow' | 'block' | 'to be requested'
 }
 
 export class User extends createModel<UserInstance>(attributes, 'User') {}
