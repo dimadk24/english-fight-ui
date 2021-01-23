@@ -7,7 +7,6 @@ import Div from '@vkontakte/vkui/dist/components/Div/Div'
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar'
 import PanelHeader from '../helpers/PanelHeader'
 import { Switch } from '@vkontakte/vkui'
-import { NOTIFICATIONS_STATUSES } from '../../constants'
 import { AppService } from '../AppService'
 import { UserInstance } from '../../core/user-model'
 import Loader from '../helpers/Loader'
@@ -66,9 +65,7 @@ const Home = ({
             multiline
             indicator={
               <Switch
-                checked={
-                  user.notificationsStatus === NOTIFICATIONS_STATUSES.ALLOW
-                }
+                checked={AppService.areNotificationsEnabled(user)}
                 onChange={onSwitchNotifications}
                 disabled={loading}
               />

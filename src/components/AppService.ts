@@ -2,6 +2,7 @@ import { ApiService } from '../core/ApiService'
 import { User, UserInstance } from '../core/user-model'
 import { NOTIFICATIONS_STATUSES } from '../constants'
 import bridge from '@vkontakte/vk-bridge'
+import { Utils } from '../Utils'
 
 export class AppService {
   static areNotificationsEnabledOnVkSide = Boolean(
@@ -40,5 +41,12 @@ export class AppService {
       // rejected
       return AppService.blockNotifications()
     }
+  }
+
+  static areNotificationsEnabled(user: UserInstance): boolean {
+    return (
+      user.notificationsStatus === NOTIFICATIONS_STATUSES.ALLOW &&
+      AppService.areNotificationsEnabledOnVkSide
+    )
   }
 }
