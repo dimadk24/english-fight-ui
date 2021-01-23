@@ -123,7 +123,11 @@ const App = (): JSX.Element => {
     >
       <View id="game" activePanel={activePanel} popout={popout}>
         <Panel id="home">
-          <Home user={user} onStartBattle={onStartBattle} />
+          <Home
+            user={user}
+            onStartBattle={onStartBattle}
+            onUpdateUser={(updatedUser) => setUser(updatedUser)}
+          />
         </Panel>
         <Panel id="battle">
           <Battle
