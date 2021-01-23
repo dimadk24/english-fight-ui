@@ -7,3 +7,31 @@
 .action-buttons-wrapper > *:first-child {
   margin-right: 32px;
 }
+
+.notification-request-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-buttons-wrapper {
+  margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-buttons-wrapper > :first-child {
+  margin-bottom: 15px;
+}
+
+.notification-button {
+  max-width: 200px;
+}
+
+.notification-request-subtext {
+  margin-bottom: 5px;
+}
+
+.subscribe-later {
+  margin-top: 15px;
+  font-size: 14px;
+}
