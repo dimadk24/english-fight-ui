@@ -30,7 +30,6 @@ export function createModel<T>(
 ): ModelType<T> {
   // @ts-ignore
   const Model: ModelType<T> = struct(attributes, {
-    strict: true,
     name,
     defaultProps,
   })
