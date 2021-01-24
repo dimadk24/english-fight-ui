@@ -16,9 +16,11 @@ import Battle from './panels/Battle'
 import Results from './panels/Results'
 import { Icon28HomeOutline, Icon28UsersOutline } from '@vkontakte/icons'
 import ScoreboardHome from './panels/ScoreboardHome'
+import { NOTIFICATIONS_STATUSES } from '../constants'
+import { UserInstance } from '../core/user-model'
 
 const App = (): JSX.Element => {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<UserInstance>(null)
   const [popout, setPopout] = useState(<ScreenSpinner />)
   const [activeStory, setActiveStory] = useState('game')
   const [activePanel, setActivePanel] = useState('home')
@@ -63,17 +65,25 @@ const App = (): JSX.Element => {
     initTracker()
   }, [])
 
-  async function fetchUser() {
+  async function fetchUser(isInitialRequest: boolean) {
     try {
       const fetchedUser = await AppService.fetchUserData()
       setUser(fetchedUser)
+      if (isInitialRequest) {
+        if (
+          fetchedUser.notificationsStatus === NOTIFICATIONS_STATUSES.ALLOW &&
+          !AppService.areNotificationsEnabledOnVkSide
+        ) {
+          setUser(await AppService.blockNotifications())
+        }
+      }
     } finally {
       setPopout(null)
     }
   }
 
   useEffect(() => {
-    fetchUser()
+    fetchUser(true)
   }, [])
 
   const onFinishGame = async (localBattle: GameInstance) => {
@@ -81,7 +91,7 @@ const App = (): JSX.Element => {
     setBattle(updatedBattle)
     setActivePanel('results')
     reachGoal('finish-game')
-    fetchUser()
+    fetchUser(false)
   }
 
   const goToHomePanel = () => setActivePanel('home')
