@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import Button from '@vkontakte/vkui/dist/components/Button/Button'
 import Group from '@vkontakte/vkui/dist/components/Group/Group'
@@ -10,6 +10,7 @@ import { Switch } from '@vkontakte/vkui'
 import { AppService } from '../AppService'
 import { UserInstance } from '../../core/user-model'
 import Loader from '../helpers/Loader'
+import { NOTIFICATIONS_STATUSES } from '../../constants'
 
 const Home = ({
   onStartBattle,
@@ -17,6 +18,24 @@ const Home = ({
   onUpdateUser,
 }: InferProps<typeof Home.propTypes>): JSX.Element => {
   const [loading, setLoading] = useState(false)
+  const [areNotificationsEnabled, setAreNotificationsEnabled] = useState(false)
+  const [trustVkNotificationsInfo, setTrustVkNotificationsInfo] = useState(true)
+
+  useEffect(() => {
+    if (user) {
+      const notificationsEnabledOnAppSide =
+        user.notificationsStatus === NOTIFICATIONS_STATUSES.ALLOW
+      if (trustVkNotificationsInfo)
+        setAreNotificationsEnabled(
+          notificationsEnabledOnAppSide &&
+            AppService.areNotificationsEnabledOnVkSide
+        )
+      else {
+        setAreNotificationsEnabled(notificationsEnabledOnAppSide)
+      }
+    }
+  }, [user, trustVkNotificationsInfo])
+
   const onSwitchNotifications = async (event) => {
     const { checked: newChecked } = event.target
     setLoading(true)
@@ -30,10 +49,12 @@ const Home = ({
         updatedUser = await AppService.blockNotifications()
       }
       onUpdateUser(updatedUser)
+      setTrustVkNotificationsInfo(false)
     } finally {
       setLoading(false)
     }
   }
+
   return (
     <>
       <PanelHeader text="English Clash" showBackButton={false} />
@@ -68,7 +89,7 @@ const Home = ({
             multiline
             indicator={
               <Switch
-                checked={AppService.areNotificationsEnabled(user)}
+                checked={areNotificationsEnabled}
                 onChange={onSwitchNotifications}
                 disabled={loading}
               />

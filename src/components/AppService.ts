@@ -52,11 +52,4 @@ export class AppService {
       throw e
     }
   }
-
-  static areNotificationsEnabled(user: UserInstance): boolean {
-    return (
-      user.notificationsStatus === NOTIFICATIONS_STATUSES.ALLOW &&
-      AppService.areNotificationsEnabledOnVkSide
-    )
-  }
 }
