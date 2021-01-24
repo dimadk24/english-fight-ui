@@ -14,7 +14,7 @@ import { BattleService } from './panels/BattleService'
 import Home from './panels/Home'
 import Battle from './panels/Battle'
 import Results from './panels/Results'
-import { Icon28Game, Icon28UsersOutline } from '@vkontakte/icons'
+import { Icon28HomeOutline, Icon28UsersOutline } from '@vkontakte/icons'
 import ScoreboardHome from './panels/ScoreboardHome'
 
 const App = (): JSX.Element => {
@@ -102,14 +102,14 @@ const App = (): JSX.Element => {
       tabbar={
         <Tabbar>
           <TabbarItem
-            text="Игра"
+            text="Главная"
             selected={activeStory === 'game'}
             onClick={() => {
               setActiveStory('game')
               setActivePanel('home')
             }}
           >
-            <Icon28Game />
+            <Icon28HomeOutline />
           </TabbarItem>
           <TabbarItem
             text="Рейтинг"
