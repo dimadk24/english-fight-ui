@@ -11,7 +11,7 @@ import Icon24Home from '@vkontakte/icons/dist/24/home'
 import Icon24Replay from '@vkontakte/icons/dist/24/replay'
 import { NOTIFICATIONS_STATUSES } from '../../constants'
 import { AppService } from '../AppService'
-import { Caption, Card, CardGrid, Div } from '@vkontakte/vkui'
+import { Card, CardGrid, Div } from '@vkontakte/vkui'
 import Loader from '../helpers/Loader'
 
 function Results({
@@ -89,13 +89,9 @@ function Results({
               Не сейчас
             </Button>
           </div>
-          <Caption
-            level="4"
-            weight="regular"
-            className="notification-request-subtext"
-          >
+          <span className="notification-request-subtext">
             Всегда можно отписаться на главном экране
-          </Caption>
+          </span>
         </div>
       </Card>
     </CardGrid>
