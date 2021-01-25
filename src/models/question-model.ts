@@ -4,7 +4,7 @@ import { ID, Null } from '../core/tcomb-types'
 
 const attributes = {
   id: ID,
-  questionWord: tcomb.String,
+  question: tcomb.String,
   answerWords: tcomb.list(tcomb.String),
   correctAnswer: tcomb.union([Null, tcomb.String]),
   selectedAnswer: tcomb.union([Null, tcomb.String]),
@@ -13,7 +13,7 @@ const attributes = {
 
 export interface QuestionInstance extends ModelInstance {
   id: number
-  questionWord: string
+  question: string
   answerWords: string[]
   correctAnswer: null | string
   selectedAnswer: null | string

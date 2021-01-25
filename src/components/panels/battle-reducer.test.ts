@@ -50,21 +50,21 @@ describe('battleReducer', () => {
           questions: [
             {
               id: 1,
-              questionWord: 'test',
+              question: 'test',
             },
             {
               id: 2,
-              questionWord: 'cat',
+              question: 'cat',
             },
             {
               id: 3,
-              questionWord: 'car',
+              question: 'car',
             },
           ],
         },
         activeQuestion: {
           id: 2,
-          questionWord: 'cat',
+          question: 'cat',
         },
         hasNextQuestion: true,
       }
@@ -72,7 +72,7 @@ describe('battleReducer', () => {
         type: battleActions.updateQuestion,
         payload: {
           id: 2,
-          questionWord: 'dog',
+          question: 'dog',
         },
       }
       const actual = battleReducer(initialState, action)
@@ -82,21 +82,21 @@ describe('battleReducer', () => {
           questions: [
             {
               id: 1,
-              questionWord: 'test',
+              question: 'test',
             },
             {
               id: 2,
-              questionWord: 'dog',
+              question: 'dog',
             },
             {
               id: 3,
-              questionWord: 'car',
+              question: 'car',
             },
           ],
         },
         activeQuestion: {
           id: 2,
-          questionWord: 'dog',
+          question: 'dog',
         },
         hasNextQuestion: true,
       }
@@ -112,17 +112,17 @@ describe('battleReducer', () => {
           questions: [
             {
               id: 1,
-              questionWord: 'cat',
+              question: 'cat',
             },
             {
               id: 2,
-              questionWord: 'dog',
+              question: 'dog',
             },
           ],
         },
         activeQuestion: {
           id: 1,
-          questionWord: 'cat',
+          question: 'cat',
         },
         hasNextQuestion: true,
       }
@@ -136,17 +136,17 @@ describe('battleReducer', () => {
           questions: [
             {
               id: 1,
-              questionWord: 'cat',
+              question: 'cat',
             },
             {
               id: 2,
-              questionWord: 'dog',
+              question: 'dog',
             },
           ],
         },
         activeQuestion: {
           id: 2,
-          questionWord: 'dog',
+          question: 'dog',
         },
         hasNextQuestion: false,
       }
@@ -160,21 +160,21 @@ describe('battleReducer', () => {
           questions: [
             {
               id: 1,
-              questionWord: 'cat',
+              question: 'cat',
             },
             {
               id: 2,
-              questionWord: 'dog',
+              question: 'dog',
             },
             {
               id: 3,
-              questionWord: 'car',
+              question: 'car',
             },
           ],
         },
         activeQuestion: {
           id: 1,
-          questionWord: 'cat',
+          question: 'cat',
         },
         hasNextQuestion: true,
       }
@@ -188,21 +188,21 @@ describe('battleReducer', () => {
           questions: [
             {
               id: 1,
-              questionWord: 'cat',
+              question: 'cat',
             },
             {
               id: 2,
-              questionWord: 'dog',
+              question: 'dog',
             },
             {
               id: 3,
-              questionWord: 'car',
+              question: 'car',
             },
           ],
         },
         activeQuestion: {
           id: 2,
-          questionWord: 'dog',
+          question: 'dog',
         },
         hasNextQuestion: true,
       }
@@ -216,17 +216,17 @@ describe('battleReducer', () => {
           questions: [
             {
               id: 1,
-              questionWord: 'cat',
+              question: 'cat',
             },
             {
               id: 2,
-              questionWord: 'dog',
+              question: 'dog',
             },
           ],
         },
         activeQuestion: {
           id: 2,
-          questionWord: 'dog',
+          question: 'dog',
         },
         hasNextQuestion: false,
       }
