@@ -6,7 +6,7 @@ import './Question.css'
 import clsx from 'clsx'
 
 function Question({
-  questionWord,
+  question,
   answerWords,
   selectedAnswer,
   isCorrect,
@@ -15,7 +15,7 @@ function Question({
 }: InferProps<typeof Question.propTypes>): JSX.Element {
   return (
     <Div>
-      <p>Слово на английском: {questionWord}</p>
+      <p>Слово на английском: {question}</p>
       <p> Выбери его перевод на русский:</p>
       {answerWords.map((answer) => {
         const isCorrectAnswer = answer === correctAnswer
@@ -42,7 +42,7 @@ function Question({
 }
 
 Question.propTypes = {
-  questionWord: PropTypes.string.isRequired,
+  question: PropTypes.string.isRequired,
   answerWords: PropTypes.arrayOf(PropTypes.string).isRequired,
   selectedAnswer: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   correctAnswer: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
