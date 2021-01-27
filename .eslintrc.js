@@ -97,6 +97,9 @@ module.exports = {
         components: ['Link'],
       },
     ],
+    // Since we do not use prop-types
+    'react/prop-types': 'off',
+    'react/require-default-props': 'off',
 
     // typescript
     '@typescript-eslint/ban-ts-comment': 'off',
