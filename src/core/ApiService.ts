@@ -3,7 +3,7 @@ import { toCamel, toSnake } from 'convert-keys'
 import castArray from 'lodash.castarray'
 import { ModelType } from './model-utils'
 
-const API_URL = process.env.REACT_APP_API_URL
+const API_HOST = process.env.REACT_APP_API_HOST
 
 type Data = Record<string, unknown>
 
@@ -78,7 +78,7 @@ export class ApiService {
     }
     options.method = method
     const response = await timeout(
-      fetch(ApiService.createFullUrl(url, urlParams), options),
+      fetch(ApiService.createFullApiURL(url, urlParams), options),
       10000
     )
     return ApiService.processResponse<T>(response, Model)
@@ -102,11 +102,18 @@ export class ApiService {
     return `QueryString ${queryString}`
   }
 
+  static createFullApiURL(
+    relativeUrl: string,
+    queryParams?: URLSearchParams
+  ): string {
+    return ApiService.createFullUrl(`api/${relativeUrl}`, queryParams)
+  }
+
   static createFullUrl(
     relativeUrl: string,
     queryParams?: URLSearchParams
   ): string {
-    const domain = ApiService.removeTrailingSlash(API_URL)
+    const domain = ApiService.removeTrailingSlash(API_HOST)
     let url = `${domain}/${relativeUrl}`
     if (queryParams && String(queryParams)) {
       url += `?${String(queryParams)}`
