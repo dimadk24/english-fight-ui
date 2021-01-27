@@ -1,0 +1,11 @@
+.choose-game-type-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.choose-game-type-body > * {
+  width: 80%;
+  margin: 0 auto 16px;
+}

@@ -18,6 +18,7 @@ import { Icon28HomeOutline, Icon28UsersOutline } from '@vkontakte/icons'
 import ScoreboardHome from './panels/ScoreboardHome'
 import { NOTIFICATIONS_STATUSES } from '../constants'
 import { UserInstance } from '../core/user-model'
+import ChooseGameType from './panels/ChooseGameType'
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState<UserInstance>(null)
@@ -25,6 +26,7 @@ const App = (): JSX.Element => {
   const [activeStory, setActiveStory] = useState('game')
   const [activePanel, setActivePanel] = useState('home')
   const [battle, setBattle] = useState(null)
+  const [gameType, setGameType] = useState<string>(null)
 
   useEffect(() => {
     if (Utils.isProductionMode) {
@@ -96,7 +98,12 @@ const App = (): JSX.Element => {
 
   const goToHomePanel = () => setActivePanel('home')
 
-  const onStartBattle = () => {
+  const goToChooseGameTypePanel = () => {
+    setActivePanel('choose-game-type')
+  }
+
+  const onStartBattle = (chosenGameType?: string) => {
+    if (chosenGameType) setGameType(chosenGameType)
     setActivePanel('battle')
     reachGoal('start-game')
   }
@@ -135,21 +142,24 @@ const App = (): JSX.Element => {
         <Panel id="home">
           <Home
             user={user}
-            onStartBattle={onStartBattle}
+            onStartBattle={goToChooseGameTypePanel}
             onUpdateUser={(updatedUser) => setUser(updatedUser)}
           />
         </Panel>
+        <Panel id="choose-game-type">
+          <ChooseGameType onGoBack={goToHomePanel} onChoose={onStartBattle} />
+        </Panel>
         <Panel id="battle">
           <Battle
-            onGoBack={goToHomePanel}
-            user={user}
+            onGoBack={goToChooseGameTypePanel}
             onFinishGame={onFinishGame}
+            gameType={gameType}
           />
         </Panel>
         <Panel id="results">
           <Results
             user={user}
-            onRetry={onStartBattle}
+            onRetry={() => onStartBattle(null)}
             onGoBack={goToHomePanel}
             battle={battle}
             onUpdateUser={(updatedUser) => setUser(updatedUser)}
