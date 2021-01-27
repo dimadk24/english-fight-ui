@@ -3,8 +3,12 @@ import { Game, GameInstance } from '../../models/game-model'
 import { Question, QuestionInstance } from '../../models/question-model'
 
 export class BattleService {
-  static async startBattle(): Promise<GameInstance> {
-    return ApiService.post('game', {}, { expand: 'questions', Model: Game })
+  static async startBattle(gameType: string): Promise<GameInstance> {
+    return ApiService.post(
+      'game',
+      { type: gameType },
+      { expand: 'questions', Model: Game }
+    )
   }
 
   static async submitQuestion(

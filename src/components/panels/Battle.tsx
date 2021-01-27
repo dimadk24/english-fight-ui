@@ -1,18 +1,25 @@
 import React, { useEffect, useReducer, useState } from 'react'
-import PropTypes, { InferProps } from 'prop-types'
 import PanelHeader from '../helpers/PanelHeader'
 import { BattleService } from './BattleService'
 import Question from '../Question'
 import { Utils } from '../../Utils'
 import { battleActions, battleReducer, initialState } from './battle-reducer'
 import Loader from '../helpers/Loader'
+import { GameInstance } from '../../models/game-model'
 
 const WAIT_TIME_TO_SHOW_CORRECT_ANSWER = 1000
+
+interface PropTypes {
+  gameType?: string
+  onGoBack()
+  onFinishGame(game: GameInstance)
+}
 
 const Battle = ({
   onGoBack,
   onFinishGame,
-}: InferProps<typeof Battle.propTypes>): JSX.Element => {
+  gameType = null,
+}: PropTypes): JSX.Element => {
   const [loading, setLoading] = useState(false)
   const [state, dispatch] = useReducer(battleReducer, initialState)
   const { battle, activeQuestion, hasNextQuestion } = state
@@ -21,7 +28,7 @@ const Battle = ({
     const startBattle = async () => {
       setLoading(true)
       try {
-        const fetchedBattle = await BattleService.startBattle()
+        const fetchedBattle = await BattleService.startBattle(gameType)
         dispatch({
           type: battleActions.setBattle,
           payload: fetchedBattle,
@@ -30,8 +37,8 @@ const Battle = ({
         setLoading(false)
       }
     }
-    startBattle()
-  }, [])
+    if (gameType) startBattle()
+  }, [gameType])
 
   const onSelectAnswer = async (answer) => {
     const questionToSubmit = activeQuestion.set('selectedAnswer', answer)
@@ -58,29 +65,15 @@ const Battle = ({
     <>
       <PanelHeader onBackButtonClick={onGoBack} text="Игра" />
       {activeQuestion && (
-        <Question {...activeQuestion} onSelectAnswer={onSelectAnswer} />
+        <Question
+          question={activeQuestion}
+          onSelectAnswer={onSelectAnswer}
+          gameType={gameType}
+        />
       )}
       {loading && <Loader />}
     </>
   )
-}
-
-Battle.propTypes = {
-  onGoBack: PropTypes.func.isRequired,
-  onFinishGame: PropTypes.func.isRequired,
-  user: PropTypes.shape({
-    photoUrl: PropTypes.string.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    score: PropTypes.number.isRequired,
-    foreverRank: PropTypes.number.isRequired,
-    monthlyRank: PropTypes.number.isRequired,
-    notificationsStatus: PropTypes.string.isRequired,
-  }),
-}
-
-Battle.defaultProps = {
-  user: null,
 }
 
 export default Battle
