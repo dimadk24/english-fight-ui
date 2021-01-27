@@ -104,7 +104,7 @@ export class ApiService {
 
   static createFullUrl(
     relativeUrl: string,
-    queryParams: URLSearchParams
+    queryParams?: URLSearchParams
   ): string {
     const domain = ApiService.removeTrailingSlash(API_URL)
     let url = `${domain}/${relativeUrl}`
