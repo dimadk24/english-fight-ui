@@ -40,7 +40,8 @@ const Battle = ({
     if (gameType) startBattle()
   }, [gameType])
 
-  const onSelectAnswer = async (answer) => {
+  const onSelectAnswer = async (answer: string) => {
+    if (loading) return
     const questionToSubmit = activeQuestion.set('selectedAnswer', answer)
     setLoading(true)
     try {
