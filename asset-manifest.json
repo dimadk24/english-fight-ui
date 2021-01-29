@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/english-fight-ui/static/css/main.ba4b5015.chunk.css",
+    "main.css": "/english-fight-ui/static/css/main.614d6d4b.chunk.css",
     "main.js": "/english-fight-ui/static/js/main.ffede4f0.chunk.js",
     "main.js.map": "/english-fight-ui/static/js/main.ffede4f0.chunk.js.map",
     "runtime-main.js": "/english-fight-ui/static/js/runtime-main.9de9025f.js",
@@ -14,7 +14,7 @@
     "static/js/4.1519df65.chunk.js.map": "/english-fight-ui/static/js/4.1519df65.chunk.js.map",
     "index.html": "/english-fight-ui/index.html",
     "static/css/2.d6b48c90.chunk.css.map": "/english-fight-ui/static/css/2.d6b48c90.chunk.css.map",
-    "static/css/main.ba4b5015.chunk.css.map": "/english-fight-ui/static/css/main.ba4b5015.chunk.css.map",
+    "static/css/main.614d6d4b.chunk.css.map": "/english-fight-ui/static/css/main.614d6d4b.chunk.css.map",
     "static/js/2.27124126.chunk.js.LICENSE.txt": "/english-fight-ui/static/js/2.27124126.chunk.js.LICENSE.txt",
     "static/js/3.10acd976.chunk.js.LICENSE.txt": "/english-fight-ui/static/js/3.10acd976.chunk.js.LICENSE.txt"
   },
@@ -22,7 +22,7 @@
     "static/js/runtime-main.9de9025f.js",
     "static/css/2.d6b48c90.chunk.css",
     "static/js/2.27124126.chunk.js",
-    "static/css/main.ba4b5015.chunk.css",
+    "static/css/main.614d6d4b.chunk.css",
     "static/js/main.ffede4f0.chunk.js"
   ]
 }
