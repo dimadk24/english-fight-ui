@@ -13,6 +13,7 @@ import { NOTIFICATIONS_STATUSES } from '../../constants'
 import { AppService } from '../AppService'
 import { Card, CardGrid, Div } from '@vkontakte/vkui'
 import Loader from '../helpers/Loader'
+import { Icon24Cancel } from '@vkontakte/icons'
 
 function Results({
   user,
@@ -42,6 +43,32 @@ function Results({
     </div>
   )
 
+  async function allowNotifications() {
+    if (loading) return
+    setLoading(true)
+    try {
+      const updatedUser = await AppService.requestNotifications()
+      onUpdateUser(updatedUser)
+      if (updatedUser.notificationsStatus === NOTIFICATIONS_STATUSES.BLOCK) {
+        // if user clicked subscribe, but rejected in VK popup
+        setRejectedNotifications(true)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function blockNotifications() {
+    if (loading) return
+    setLoading(true)
+    try {
+      onUpdateUser(await AppService.blockNotifications())
+      setRejectedNotifications(true)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const notificationRequest = (
     <CardGrid style={{ marginTop: '10px' }}>
       <Card size="l" style={{ padding: '10px' }}>
@@ -54,22 +81,7 @@ function Results({
               size="m"
               mode="commerce"
               className="notification-button"
-              onClick={async () => {
-                setLoading(true)
-                try {
-                  const updatedUser = await AppService.requestNotifications()
-                  onUpdateUser(updatedUser)
-                  if (
-                    updatedUser.notificationsStatus ===
-                    NOTIFICATIONS_STATUSES.BLOCK
-                  ) {
-                    // if user clicked subscribe, but rejected in VK popup
-                    setRejectedNotifications(true)
-                  }
-                } finally {
-                  setLoading(false)
-                }
-              }}
+              onClick={allowNotifications}
               disabled={loading}
             >
               Подписаться
@@ -78,17 +90,15 @@ function Results({
               size="m"
               mode="secondary"
               className="notification-button"
-              onClick={async () => {
-                setLoading(true)
-                onUpdateUser(await AppService.blockNotifications())
-                setLoading(false)
-                setRejectedNotifications(true)
-              }}
+              onClick={blockNotifications}
               disabled={loading}
             >
               Не сейчас
             </Button>
           </div>
+          <span className="notification-request-close">
+            <Icon24Cancel onClick={blockNotifications} />
+          </span>
           <span className="notification-request-subtext">
             Всегда можно отписаться на главном экране
           </span>
