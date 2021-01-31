@@ -77,12 +77,10 @@ jobs:
     name: Deploy prod
     runs-on: ubuntu-18.04
     if: github.ref == 'refs/heads/master'
-    needs: [lint, types, test, build]
+    needs: [ lint, types, test, build ]
     env:
       REACT_APP_API_HOST: ${{secrets.API_HOST}}
       REACT_APP_SENTRY_DSN: ${{secrets.SENTRY_DSN}}
-      REACT_APP_POSTHOG_ID: ${{secrets.POSTHOG_ID}}
-      REACT_APP_METRIKA_ID: ${{secrets.METRIKA_ID}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -105,3 +103,4 @@ jobs:
           BRANCH: gh-pages
           FOLDER: build
           CLEAN: true
+
