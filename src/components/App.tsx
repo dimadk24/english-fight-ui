@@ -19,6 +19,7 @@ import ScoreboardHome from './panels/ScoreboardHome'
 import { NOTIFICATIONS_STATUSES } from '../constants'
 import { UserInstance } from '../core/user-model'
 import ChooseGameType from './panels/ChooseGameType'
+import { VkPixelTracker } from '../core/trackers/VkPixelTracker'
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState<UserInstance>(null)
@@ -94,6 +95,7 @@ const App = (): JSX.Element => {
     setBattle(updatedBattle)
     setActivePanel('results')
     tracker.reachGoal('finish-game')
+    VkPixelTracker.reachGoal('conversion')
     fetchUser(false)
   }
 
