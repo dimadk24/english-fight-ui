@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { createTracker, TrackerInterface } from './tracker-utils'
+import { TrackerInterface } from './TrackerInterface'
 
-export const LocalTracker: TrackerInterface = createTracker({
+export const LocalTracker: TrackerInterface = {
   async init(): Promise<void> {
     console.log('Init tracker')
   },
@@ -13,4 +13,4 @@ export const LocalTracker: TrackerInterface = createTracker({
   async reachGoal(name: string): Promise<void> {
     console.log(`Reach goal ${name}`)
   },
-})
+}
