@@ -7,7 +7,7 @@ import './constant-styles.css'
 import { Utils } from '../Utils'
 import * as Sentry from '@sentry/react'
 import './App.css'
-import { trackers } from '../core/trackers/trackers'
+import { tracker } from '../core/trackers/tracker'
 import { Epic, Panel, Tabbar, TabbarItem, View } from '@vkontakte/vkui'
 import { GameInstance } from '../models/game-model'
 import { BattleService } from './panels/BattleService'
@@ -65,7 +65,7 @@ const App = (): JSX.Element => {
         },
       })
     }
-    trackers.init()
+    tracker.init()
   }, [])
 
   async function fetchUser(isInitialRequest: boolean) {
@@ -80,7 +80,7 @@ const App = (): JSX.Element => {
           setUser(await AppService.blockNotifications())
         }
       }
-      trackers.identify(fetchedUser.id, fetchedUser.vkId)
+      tracker.identify(fetchedUser.id, fetchedUser.vkId)
     } finally {
       setPopout(null)
     }
@@ -94,7 +94,7 @@ const App = (): JSX.Element => {
     const updatedBattle = await BattleService.getBattle(localBattle.id)
     setBattle(updatedBattle)
     setActivePanel('results')
-    trackers.reachGoal('finish-game')
+    tracker.reachGoal('finish-game')
     VkPixelTracker.reachGoal('conversion')
     fetchUser(false)
   }
@@ -108,7 +108,7 @@ const App = (): JSX.Element => {
   const onStartBattle = (chosenGameType?: string) => {
     if (chosenGameType) setGameType(chosenGameType)
     setActivePanel('battle')
-    trackers.reachGoal('start-game')
+    tracker.reachGoal('start-game')
   }
 
   const onOpenScoreboard = () => {
