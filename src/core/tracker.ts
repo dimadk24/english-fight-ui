@@ -1,9 +1,24 @@
-import { TrackerInterface } from './TrackerInterface'
+/* eslint-disable class-methods-use-this, no-console */
+// eslint-disable-next-line max-classes-per-file
+import { Utils } from '../Utils'
 
-const METRIKA_ID = process.env.REACT_APP_METRIKA_ID
+interface TrackerInterface {
+  init: () => void
+  reachGoal: (name: string) => Promise<void>
+}
 
-export const MetrikaTracker: TrackerInterface = {
-  async init(): Promise<void> {
+class LocalTracker implements TrackerInterface {
+  init() {
+    console.log('Init tracker')
+  }
+
+  async reachGoal(name) {
+    console.log(`Reach goal ${name}`)
+  }
+}
+
+class MetrikaTracker implements TrackerInterface {
+  init(): void {
     /* eslint-disable */
     ;(function(m, e, t, r, i, k, a) {
       m[i] =
@@ -22,7 +37,7 @@ export const MetrikaTracker: TrackerInterface = {
 
     try {
       // @ts-ignore
-      ym(METRIKA_ID, 'init', {
+      ym(70656700, 'init', {
         clickmap: true,
         trackLinks: true,
         accurateTrackBounce: true,
@@ -33,28 +48,14 @@ export const MetrikaTracker: TrackerInterface = {
       console.warn(e)
     }
     /* eslint-enable */
-  },
+  }
 
-  async identify(id: number, vkId: number): Promise<void> {
-    try {
-      // @ts-ignore
-      window.ym(METRIKA_ID, 'userParams', {
-        UserID: id,
-        vkId,
-      })
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log('Seems like Yandex metrika is blocked')
-      // eslint-disable-next-line no-console
-      console.warn(e)
-    }
-  },
-
+  // eslint-disable-next-line class-methods-use-this
   reachGoal(name: string): Promise<void> {
     return new Promise((res) => {
       try {
         // @ts-ignore
-        window.ym(METRIKA_ID, 'reachGoal', name, () => res())
+        window.ym(70656700, 'reachGoal', name, () => res())
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log('Seems like Yandex metrika is blocked')
@@ -62,5 +63,22 @@ export const MetrikaTracker: TrackerInterface = {
         console.warn(e)
       }
     })
-  },
+  }
+}
+
+const TrackerClass = Utils.isProductionMode ? MetrikaTracker : LocalTracker
+
+const tracker = new TrackerClass()
+let initialized = false
+
+export function initTracker(): void {
+  if (!initialized) {
+    tracker.init()
+    initialized = true
+  }
+}
+
+export function reachGoal(name: string): void {
+  if (!initialized) throw new Error('Tracker was not initialized')
+  tracker.reachGoal(name)
 }
