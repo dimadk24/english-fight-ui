@@ -1,8 +1,8 @@
-import { TrackerInterface } from './TrackerInterface'
+import { createTracker, TrackerInterface } from './tracker-utils'
 
 const METRIKA_ID = process.env.REACT_APP_METRIKA_ID
 
-export const MetrikaTracker: TrackerInterface = {
+export const MetrikaTracker: TrackerInterface = createTracker({
   async init(): Promise<void> {
     /* eslint-disable */
     ;(function(m, e, t, r, i, k, a) {
@@ -63,4 +63,4 @@ export const MetrikaTracker: TrackerInterface = {
       }
     })
   },
-}
+})
