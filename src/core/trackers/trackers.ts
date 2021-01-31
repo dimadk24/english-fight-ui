@@ -4,12 +4,12 @@ import { PosthogTracker } from './PosthogTracker'
 import { LocalTracker } from './LocalTracker'
 import { VkPixelTracker } from './VkPixelTracker'
 
-const trackers = Utils.isProductionMode
+const registeredTrackers = Utils.isProductionMode
   ? [MetrikaTracker, PosthogTracker, VkPixelTracker]
   : [LocalTracker]
 
 function call(method: string, ...args: Array<unknown>) {
-  trackers.forEach((tracker) => {
+  registeredTrackers.forEach((tracker) => {
     if (
       tracker.AUTOMATIC_OPERATIONS[0] === '*' ||
       tracker.AUTOMATIC_OPERATIONS.includes(method)
@@ -18,7 +18,7 @@ function call(method: string, ...args: Array<unknown>) {
   })
 }
 
-export const tracker = {
+export const trackers = {
   identify(id: number, vkId: number): void {
     call('identify', id, vkId)
   },
