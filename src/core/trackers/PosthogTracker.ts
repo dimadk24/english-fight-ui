@@ -1,6 +1,6 @@
 import posthog from 'posthog-js'
 import { timeout } from 'promise-timeout'
-import { TrackerInterface } from './TrackerInterface'
+import { createTracker, TrackerInterface } from './tracker-utils'
 
 let initPromise = null
 
@@ -11,7 +11,7 @@ async function waitForInit(): Promise<void> {
   await initPromise
 }
 
-export const PosthogTracker: TrackerInterface = {
+export const PosthogTracker: TrackerInterface = createTracker({
   init(): Promise<void> {
     initPromise = new Promise<void>((res) => {
       posthog.init(process.env.REACT_APP_POSTHOG_ID, {
@@ -32,4 +32,4 @@ export const PosthogTracker: TrackerInterface = {
     await waitForInit()
     posthog.capture(name)
   },
-}
+})

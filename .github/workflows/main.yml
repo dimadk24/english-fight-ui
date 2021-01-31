@@ -83,6 +83,7 @@ jobs:
       REACT_APP_SENTRY_DSN: ${{secrets.SENTRY_DSN}}
       REACT_APP_POSTHOG_ID: ${{secrets.POSTHOG_ID}}
       REACT_APP_METRIKA_ID: ${{secrets.METRIKA_ID}}
+      REACT_APP_VK_PIXEL_ID: ${{secrets.VK_PIXEL_ID}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
