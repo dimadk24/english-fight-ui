@@ -27,7 +27,7 @@ export const trackers = {
     call('init')
   },
 
-  reachGoal(name: string): void {
-    call('reachGoal', name)
+  reachGoal(name: string, params?: Record<string, unknown>): void {
+    call('reachGoal', name, params)
   },
 }

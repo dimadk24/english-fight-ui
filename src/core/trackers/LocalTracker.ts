@@ -10,7 +10,10 @@ export const LocalTracker: TrackerInterface = createTracker({
     console.log(`linked session with userId ${id}, vkId ${vkId}`)
   },
 
-  async reachGoal(name: string): Promise<void> {
-    console.log(`Reach goal ${name}`)
+  async reachGoal(
+    name: string,
+    params?: Record<string, unknown>
+  ): Promise<void> {
+    console.log(`Reach goal ${name} with params`, params)
   },
 })

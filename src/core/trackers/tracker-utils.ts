@@ -2,7 +2,7 @@ export interface TrackerInterface {
   AUTOMATIC_OPERATIONS: Array<string>
   init: () => Promise<void>
   identify: (id: number, vkId: number) => Promise<void>
-  reachGoal: (name: string) => Promise<void>
+  reachGoal: (name: string, params?: Record<string, unknown>) => Promise<void>
 }
 
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>
