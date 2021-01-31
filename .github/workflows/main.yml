@@ -79,8 +79,8 @@ jobs:
     if: github.ref == 'refs/heads/master'
     needs: [ lint, types, test, build ]
     env:
-      REACT_APP_API_HOST: ${{secrets.API_HOST}}
-      REACT_APP_SENTRY_DSN: ${{secrets.SENTRY_DSN}}
+      REACT_APP_API_HOST: ${{secrets.REACT_APP_API_HOST}}
+      REACT_APP_SENTRY_DSN: ${{secrets.REACT_APP_SENTRY_DSN}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
