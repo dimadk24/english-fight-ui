@@ -3,7 +3,7 @@ import { User, UserInstance } from '../core/user-model'
 import { NOTIFICATIONS_STATUSES } from '../constants'
 import bridge from '@vkontakte/vk-bridge'
 import { Utils } from '../Utils'
-import { trackers } from '../core/trackers/trackers'
+import { tracker } from '../core/trackers/tracker'
 
 export class AppService {
   static areNotificationsEnabledOnVkSide = Boolean(
@@ -15,7 +15,7 @@ export class AppService {
   }
 
   static async allowNotifications(): Promise<UserInstance> {
-    trackers.reachGoal('allow-notifications')
+    tracker.reachGoal('allow-notifications')
     return ApiService.patch<UserInstance>(
       'user',
       { notificationsStatus: NOTIFICATIONS_STATUSES.ALLOW },
@@ -24,7 +24,7 @@ export class AppService {
   }
 
   static async blockNotifications(): Promise<UserInstance> {
-    trackers.reachGoal('block-notifications')
+    tracker.reachGoal('block-notifications')
     return ApiService.patch<UserInstance>(
       'user',
       { notificationsStatus: NOTIFICATIONS_STATUSES.BLOCK },
