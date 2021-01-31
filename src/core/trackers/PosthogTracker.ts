@@ -28,8 +28,11 @@ export const PosthogTracker: TrackerInterface = createTracker({
     posthog.people.set({ vkId })
   },
 
-  async reachGoal(name: string): Promise<void> {
+  async reachGoal(
+    name: string,
+    params?: Record<string, unknown>
+  ): Promise<void> {
     await waitForInit()
-    posthog.capture(name)
+    posthog.capture(name, params)
   },
 })

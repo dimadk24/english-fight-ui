@@ -108,7 +108,7 @@ const App = (): JSX.Element => {
   const onStartBattle = (chosenGameType?: string) => {
     if (chosenGameType) setGameType(chosenGameType)
     setActivePanel('battle')
-    trackers.reachGoal('start-game')
+    trackers.reachGoal('start-game', { type: chosenGameType })
   }
 
   const onOpenScoreboard = () => {

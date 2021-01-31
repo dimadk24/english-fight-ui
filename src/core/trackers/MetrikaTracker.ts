@@ -50,11 +50,11 @@ export const MetrikaTracker: TrackerInterface = createTracker({
     }
   },
 
-  reachGoal(name: string): Promise<void> {
+  reachGoal(name: string, params?: Record<string, unknown>): Promise<void> {
     return new Promise((res) => {
       try {
         // @ts-ignore
-        window.ym(METRIKA_ID, 'reachGoal', name, () => res())
+        window.ym(METRIKA_ID, 'reachGoal', name, params, () => res())
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log('Seems like Yandex metrika is blocked')
