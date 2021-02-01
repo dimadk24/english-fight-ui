@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes, { InferProps } from 'prop-types'
 import PanelHeader from '../helpers/PanelHeader'
 import { ApiService } from '../../core/ApiService'
 import { Div, FixedLayout, Group, List, Tabs, TabsItem } from '@vkontakte/vkui'
@@ -7,15 +6,18 @@ import { ScoreboardUser } from '../../models/scoreboard-user-model'
 import './ScoreboardHome.css'
 import ScoreboardItem from './ScoreboardItem'
 import Loader from '../helpers/Loader'
+import { UserInstance } from '../../core/user-model'
 
 const SCOREBOARD_TYPES = {
   forever: 'forever',
   monthly: 'monthly',
 }
 
-function ScoreboardHome({
-  user,
-}: InferProps<typeof ScoreboardHome.propTypes>): JSX.Element {
+interface Props {
+  user: UserInstance
+}
+
+function ScoreboardHome({ user = null }: Props): JSX.Element {
   const [usersList, setUsersList] = useState<ScoreboardUser[]>([])
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState(SCOREBOARD_TYPES.forever)
@@ -28,7 +30,7 @@ function ScoreboardHome({
       const users = await ApiService.get<ScoreboardUser[]>(
         `${activeTab}_scoreboard`
       )
-      const currentScoreboardUser = ScoreboardUser.fromObject(user)
+      const currentScoreboardUser = ScoreboardUser.fromObject({ ...user })
       setCurrentUserInScoreboard(
         Boolean(users.find(({ id }) => id === currentScoreboardUser.id))
       )
@@ -81,7 +83,11 @@ function ScoreboardHome({
                       ? user.foreverRank
                       : user.monthlyRank
                   }
-                  score={user.score}
+                  score={
+                    activeTab === SCOREBOARD_TYPES.forever
+                      ? user.score
+                      : user.monthlyScore
+                  }
                   photoUrl={user.photoUrl}
                   firstName={user.firstName}
                   lastName={user.lastName}
@@ -94,22 +100,6 @@ function ScoreboardHome({
       </Div>
     </>
   )
-}
-
-ScoreboardHome.propTypes = {
-  user: PropTypes.shape({
-    photoUrl: PropTypes.string.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    score: PropTypes.number.isRequired,
-    foreverRank: PropTypes.number.isRequired,
-    monthlyRank: PropTypes.number.isRequired,
-    notificationsStatus: PropTypes.string.isRequired,
-  }),
-}
-
-ScoreboardHome.defaultProps = {
-  user: null,
 }
 
 export default ScoreboardHome

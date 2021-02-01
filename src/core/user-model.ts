@@ -10,6 +10,7 @@ const attributes = {
   lastName: tcomb.String,
   photoUrl: tcomb.String,
   score: PositiveNumber,
+  monthlyScore: PositiveNumber,
   foreverRank: PositiveNumber,
   monthlyRank: PositiveNumber,
   notificationsStatus: tcomb.enums.of(
@@ -25,6 +26,7 @@ export interface UserInstance extends ModelInstance {
   lastName: string
   photoUrl: string
   score: number
+  monthlyScore: number
   foreverRank: number
   monthlyRank: number
   notificationsStatus: 'allow' | 'block' | 'to be requested'
