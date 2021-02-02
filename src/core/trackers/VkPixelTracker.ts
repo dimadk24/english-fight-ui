@@ -1,3 +1,5 @@
+import { Utils } from '../../Utils'
+
 export const VkPixelTracker = {
   AUTOMATIC_OPERATIONS: ['init'],
 
@@ -16,7 +18,9 @@ export const VkPixelTracker = {
   },
 
   reachGoal(name: string): void {
-    // @ts-ignore
-    window.VK.Goal(name)
+    if (Utils.isProductionMode) {
+      // @ts-ignore
+      window.VK.Goal(name)
+    }
   },
 }
