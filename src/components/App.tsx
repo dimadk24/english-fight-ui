@@ -105,8 +105,8 @@ const App = (): JSX.Element => {
     setActivePanel('choose-game-type')
   }
 
-  const onStartBattle = (chosenGameType?: string) => {
-    if (chosenGameType) setGameType(chosenGameType)
+  const onStartBattle = (chosenGameType: string) => {
+    if (chosenGameType !== gameType) setGameType(chosenGameType)
     setActivePanel('battle')
     trackers.reachGoal('start-game', { type: chosenGameType })
   }
@@ -162,7 +162,7 @@ const App = (): JSX.Element => {
         <Panel id="results">
           <Results
             user={user}
-            onRetry={() => onStartBattle(null)}
+            onRetry={() => onStartBattle(gameType)}
             onGoBack={goToHomePanel}
             battle={battle}
             onUpdateUser={(updatedUser) => setUser(updatedUser)}
