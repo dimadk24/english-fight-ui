@@ -1,12 +1,19 @@
 import { ApiService } from '../../core/ApiService'
 import { Game, GameInstance } from '../../models/game-model'
 import { Question, QuestionInstance } from '../../models/question-model'
+import { GameDefinitionInstance } from '../../models/game-definition-model'
 
 export class BattleService {
-  static async startBattle(gameType: string): Promise<GameInstance> {
-    return ApiService.post(
+  static async startSinglePlayerGame(gameType: string): Promise<GameInstance> {
+    const gameDefinition = await ApiService.post<GameDefinitionInstance>(
+      'game_definition',
+      {
+        type: gameType,
+      }
+    )
+    return ApiService.post<GameInstance>(
       'game',
-      { type: gameType },
+      { gameDefinition: gameDefinition.id },
       { expand: 'questions', Model: Game }
     )
   }
