@@ -28,10 +28,10 @@ const Battle = ({
     const startBattle = async () => {
       setLoading(true)
       try {
-        const fetchedBattle = await BattleService.startBattle(gameType)
+        const fetchedGame = await BattleService.startSinglePlayerGame(gameType)
         dispatch({
           type: battleActions.setBattle,
-          payload: fetchedBattle,
+          payload: fetchedGame,
         })
       } finally {
         setLoading(false)
