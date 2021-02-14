@@ -6,11 +6,12 @@ import { Utils } from '../../Utils'
 import { battleActions, battleReducer, initialState } from './battle-reducer'
 import Loader from '../helpers/Loader'
 import { GameInstance } from '../../models/game-model'
+import { GameType } from '../../constants'
 
 const WAIT_TIME_TO_SHOW_CORRECT_ANSWER = 1000
 
 interface PropTypes {
-  gameType?: string
+  gameType?: GameType
   onGoBack()
   onFinishGame(game: GameInstance)
 }
