@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import PropTypes, { InferProps } from 'prop-types'
 import Button from '@vkontakte/vkui/dist/components/Button/Button'
 import Group from '@vkontakte/vkui/dist/components/Group/Group'
 import Cell from '@vkontakte/vkui/dist/components/Cell/Cell'
@@ -12,11 +11,18 @@ import { UserInstance } from '../../core/user-model'
 import Loader from '../helpers/Loader'
 import { NOTIFICATIONS_STATUSES } from '../../constants'
 
+type Props = {
+  onStartSingleGame(): void
+  onStartMultiplayerGame(): void
+  user: UserInstance
+  onUpdateUser(user: UserInstance): void
+}
 const Home = ({
-  onStartBattle,
-  user,
+  onStartSingleGame,
+  onStartMultiplayerGame,
+  user = null,
   onUpdateUser,
-}: InferProps<typeof Home.propTypes>): JSX.Element => {
+}: Props): JSX.Element => {
   const [loading, setLoading] = useState(false)
 
   const onSwitchNotifications = async (event) => {
@@ -59,9 +65,20 @@ const Home = ({
 
       <Group>
         <Div>
-          <Button size="xl" onClick={onStartBattle} disabled={loading}>
-            Начать!
-          </Button>
+          <Cell>
+            <Button size="xl" onClick={onStartSingleGame} disabled={loading}>
+              Начать одиночную игру
+            </Button>
+          </Cell>
+          <Cell>
+            <Button
+              size="xl"
+              onClick={onStartMultiplayerGame}
+              disabled={loading}
+            >
+              Играть с другом
+            </Button>
+          </Cell>
         </Div>
       </Group>
 
@@ -86,24 +103,6 @@ const Home = ({
       {loading && <Loader />}
     </>
   )
-}
-
-Home.propTypes = {
-  onStartBattle: PropTypes.func.isRequired,
-  user: PropTypes.shape({
-    photoUrl: PropTypes.string.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    score: PropTypes.number.isRequired,
-    foreverRank: PropTypes.number.isRequired,
-    monthlyRank: PropTypes.number.isRequired,
-    notificationsStatus: PropTypes.string.isRequired,
-  }),
-  onUpdateUser: PropTypes.func.isRequired,
-}
-
-Home.defaultProps = {
-  user: null,
 }
 
 export default Home

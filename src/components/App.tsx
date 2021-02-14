@@ -16,18 +16,19 @@ import Battle from './panels/Battle'
 import Results from './panels/Results'
 import { Icon28HomeOutline, Icon28UsersOutline } from '@vkontakte/icons'
 import ScoreboardHome from './panels/ScoreboardHome'
-import { NOTIFICATIONS_STATUSES } from '../constants'
+import { GameModes, GameType, NOTIFICATIONS_STATUSES } from '../constants'
 import { UserInstance } from '../core/user-model'
 import ChooseGameType from './panels/ChooseGameType'
 import { VkPixelTracker } from '../core/trackers/VkPixelTracker'
 
 const App = (): JSX.Element => {
-  const [user, setUser] = useState<UserInstance>(null)
-  const [popout, setPopout] = useState(<ScreenSpinner />)
+  const [user, setUser] = useState<UserInstance | null>(null)
+  const [popout, setPopout] = useState<JSX.Element | null>(<ScreenSpinner />)
   const [activeStory, setActiveStory] = useState('game')
   const [activePanel, setActivePanel] = useState('home')
-  const [battle, setBattle] = useState(null)
-  const [gameType, setGameType] = useState<string>(null)
+  const [battle, setBattle] = useState<GameInstance | null>(null)
+  const [gameType, setGameType] = useState<GameType | null>(null)
+  const [gameMode, setGameMode] = useState<GameModes | null>(null)
 
   useEffect(() => {
     if (Utils.isProductionMode) {
@@ -102,14 +103,19 @@ const App = (): JSX.Element => {
 
   const goToHomePanel = () => setActivePanel('home')
 
-  const goToChooseGameTypePanel = () => {
+  const goToChooseGameTypePanel = (gameModeToSet: GameModes) => {
+    if (gameModeToSet !== gameMode) setGameMode(gameModeToSet)
     setActivePanel('choose-game-type')
   }
 
-  const onStartBattle = (chosenGameType: string) => {
+  const onStartBattle = (chosenGameType: GameType) => {
     if (chosenGameType !== gameType) setGameType(chosenGameType)
-    setActivePanel('battle')
-    trackers.reachGoal('start-game', { type: chosenGameType, mode: 'single' })
+    if (gameMode === GameModes.single) {
+      setActivePanel('battle')
+    } else {
+      setActivePanel('lobby')
+    }
+    trackers.reachGoal('start-game', { type: chosenGameType, mode: gameMode })
   }
 
   const onOpenScoreboard = () => {
@@ -146,7 +152,10 @@ const App = (): JSX.Element => {
         <Panel id="home">
           <Home
             user={user}
-            onStartBattle={goToChooseGameTypePanel}
+            onStartSingleGame={() => goToChooseGameTypePanel(GameModes.single)}
+            onStartMultiplayerGame={() => {
+              goToChooseGameTypePanel(GameModes.multi)
+            }}
             onUpdateUser={(updatedUser) => setUser(updatedUser)}
           />
         </Panel>
@@ -155,7 +164,7 @@ const App = (): JSX.Element => {
         </Panel>
         <Panel id="battle">
           <Battle
-            onGoBack={goToChooseGameTypePanel}
+            onGoBack={() => goToChooseGameTypePanel(gameMode)}
             onFinishGame={onFinishGame}
             gameType={gameType}
           />

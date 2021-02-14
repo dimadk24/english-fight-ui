@@ -7,4 +7,12 @@ export const NOTIFICATIONS_STATUSES = {
 export const GAME_TYPES = {
   WORD: 'word',
   PICTURE: 'picture',
+} as const
+
+type GameTypesKeys = keyof typeof GAME_TYPES
+export type GameType = typeof GAME_TYPES[GameTypesKeys]
+
+export enum GameModes {
+  single = 'single',
+  multi = 'multi',
 }
