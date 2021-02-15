@@ -16,7 +16,7 @@ export interface GameDefinitionInstance extends ModelInstance {
   type: string
 }
 
-export class GameDefinitionModel extends createModel<GameDefinitionInstance>(
+export class GameDefinition extends createModel<GameDefinitionInstance>(
   attributes,
   'GameDefinition'
 ) {}
