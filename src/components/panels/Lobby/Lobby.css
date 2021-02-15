@@ -1,0 +1,42 @@
+.input-wrapper {
+  display: flex;
+}
+
+.copy-button, .share-button {
+  padding: 5px 10px;;
+}
+
+.button-subtitle {
+  display: none;
+}
+
+.invite-url-input {
+  width: 100%;
+  margin-right: 20px;
+}
+
+.copy-button {
+  margin-right: 20px;
+}
+
+@media (max-width: 540px) {
+  .input-wrapper {
+    flex-wrap: wrap;
+  }
+
+  .invite-url-input {
+    margin: 0 0 10px 0;
+  }
+
+  .button-subtitle {
+    display: inline;
+  }
+
+  .copy-button, .share-button {
+    margin: 10px;
+  }
+}
+
+.invite-url-help-text {
+  margin-top: 10px;
+}

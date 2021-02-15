@@ -20,6 +20,12 @@ import { GameModes, GameType, NOTIFICATIONS_STATUSES } from '../constants'
 import { UserInstance } from '../core/user-model'
 import ChooseGameType from './panels/ChooseGameType'
 import { VkPixelTracker } from '../core/trackers/VkPixelTracker'
+import Lobby from './panels/Lobby/Lobby'
+import {
+  GameDefinition,
+  GameDefinitionInstance,
+} from '../models/game-definition-model'
+import { ApiService } from '../core/ApiService'
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState<UserInstance | null>(null)
@@ -29,6 +35,10 @@ const App = (): JSX.Element => {
   const [battle, setBattle] = useState<GameInstance | null>(null)
   const [gameType, setGameType] = useState<GameType | null>(null)
   const [gameMode, setGameMode] = useState<GameModes | null>(null)
+  const [
+    multiplayerGameDef,
+    setMultiplayerDameDef,
+  ] = useState<GameDefinitionInstance | null>(null)
 
   useEffect(() => {
     if (Utils.isProductionMode) {
@@ -108,11 +118,21 @@ const App = (): JSX.Element => {
     setActivePanel('choose-game-type')
   }
 
-  const onStartBattle = (chosenGameType: GameType) => {
+  async function createMultiplayerGameDefinition(gameDefType) {
+    const createdGameDefinition = await ApiService.post<GameDefinitionInstance>(
+      'game_definition',
+      { type: gameDefType },
+      { Model: GameDefinition }
+    )
+    setMultiplayerDameDef(createdGameDefinition)
+  }
+
+  const onStartGame = (chosenGameType: GameType) => {
     if (chosenGameType !== gameType) setGameType(chosenGameType)
     if (gameMode === GameModes.single) {
       setActivePanel('battle')
     } else {
+      createMultiplayerGameDefinition(chosenGameType)
       setActivePanel('lobby')
     }
     trackers.reachGoal('start-game', { type: chosenGameType, mode: gameMode })
@@ -160,7 +180,13 @@ const App = (): JSX.Element => {
           />
         </Panel>
         <Panel id="choose-game-type">
-          <ChooseGameType onGoBack={goToHomePanel} onChoose={onStartBattle} />
+          <ChooseGameType onGoBack={goToHomePanel} onChoose={onStartGame} />
+        </Panel>
+        <Panel id="lobby">
+          <Lobby
+            gameDefinition={multiplayerGameDef}
+            onGoBack={() => goToChooseGameTypePanel(gameMode)}
+          />
         </Panel>
         <Panel id="battle">
           <Battle
@@ -172,7 +198,7 @@ const App = (): JSX.Element => {
         <Panel id="results">
           <Results
             user={user}
-            onRetry={() => onStartBattle(gameType)}
+            onRetry={() => onStartGame(gameType)}
             onGoBack={goToHomePanel}
             battle={battle}
             onUpdateUser={(updatedUser) => setUser(updatedUser)}
