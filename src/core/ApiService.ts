@@ -2,6 +2,7 @@ import { timeout } from 'promise-timeout'
 import { toCamel, toSnake } from 'convert-keys'
 import castArray from 'lodash.castarray'
 import { ModelType } from './model-utils'
+import { Utils } from '../Utils'
 
 const API_HOST = process.env.REACT_APP_API_HOST
 
@@ -98,8 +99,22 @@ export class ApiService {
   }
 
   static getAuthorizationHeader(): string {
+    if (Utils.getSearchParam('fake_vk_id')) {
+      if (Utils.isProductionMode)
+        throw new Error('You cannot use fake_vk_id in production')
+      return ApiService.getFakeVKIDAuthHeader()
+    }
+    return ApiService.getQueryStringAuthHeader()
+  }
+
+  static getQueryStringAuthHeader(): string {
     const queryString = window.location.search.slice(1)
     return `QueryString ${queryString}`
+  }
+
+  static getFakeVKIDAuthHeader(): string {
+    const fakeVkID = Utils.getSearchParam('fake_vk_id')
+    return `FakeVKID ${fakeVkID}`
   }
 
   static createFullApiURL(
