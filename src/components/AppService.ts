@@ -2,12 +2,12 @@ import { ApiService } from '../core/ApiService'
 import { User, UserInstance } from '../core/user-model'
 import { NOTIFICATIONS_STATUSES } from '../constants'
 import bridge from '@vkontakte/vk-bridge'
-import { Utils } from '../Utils'
 import { trackers } from '../core/trackers/trackers'
+import { URLUtils } from '../URLUtils'
 
 export class AppService {
   static areNotificationsEnabledOnVkSide = Boolean(
-    parseInt(Utils.getSearchParam('vk_are_notifications_enabled'), 10)
+    parseInt(URLUtils.getSearchParam('vk_are_notifications_enabled'), 10)
   )
 
   static async fetchUserData(): Promise<UserInstance> {

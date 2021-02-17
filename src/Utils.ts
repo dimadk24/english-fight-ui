@@ -4,9 +4,4 @@ export class Utils {
   static async waitForTimeout(time: number): Promise<void> {
     await new Promise((res) => setTimeout(res, time))
   }
-
-  static getSearchParam(name: string): string {
-    const urlParams = new URLSearchParams(window.location.search)
-    return urlParams.get(name)
-  }
 }
