@@ -3,6 +3,7 @@ import { toCamel, toSnake } from 'convert-keys'
 import castArray from 'lodash.castarray'
 import { ModelType } from './model-utils'
 import { Utils } from '../Utils'
+import { URLUtils } from '../URLUtils'
 
 const API_HOST = process.env.REACT_APP_API_HOST
 
@@ -99,7 +100,7 @@ export class ApiService {
   }
 
   static getAuthorizationHeader(): string {
-    if (Utils.getSearchParam('fake_vk_id')) {
+    if (URLUtils.getSearchParam('fake_vk_id')) {
       if (Utils.isProductionMode)
         throw new Error('You cannot use fake_vk_id in production')
       return ApiService.getFakeVKIDAuthHeader()
@@ -113,7 +114,7 @@ export class ApiService {
   }
 
   static getFakeVKIDAuthHeader(): string {
-    const fakeVkID = Utils.getSearchParam('fake_vk_id')
+    const fakeVkID = URLUtils.getSearchParam('fake_vk_id')
     return `FakeVKID ${fakeVkID}`
   }
 
