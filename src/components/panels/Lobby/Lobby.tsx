@@ -64,6 +64,12 @@ function Lobby({ gameDefinition, onGoBack }: Props): JSX.Element {
             Отправь другому человеку эту ссылку, чтобы он(а) присоединился к
             игре
           </div>
+          <div className="loader-wrapper">
+            <Loader />
+            <span className="loader-caption">
+              Ожидаем подключения второго человека
+            </span>
+          </div>
           {copiedToastVisible && (
             <Snackbar onClose={onCloseToast} duration={3000}>
               Ссылка скопирована

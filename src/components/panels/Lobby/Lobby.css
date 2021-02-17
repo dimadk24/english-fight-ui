@@ -40,3 +40,12 @@
 .invite-url-help-text {
   margin-top: 10px;
 }
+
+.loader-wrapper {
+  margin: 10px 0;
+}
+
+.loader-caption {
+  display: block;
+  text-align: center;
+}
