@@ -16,7 +16,12 @@ import Battle from './panels/Battle'
 import Results from './panels/Results'
 import { Icon28HomeOutline, Icon28UsersOutline } from '@vkontakte/icons'
 import ScoreboardHome from './panels/ScoreboardHome'
-import { GameModes, GameType, NOTIFICATIONS_STATUSES } from '../constants'
+import {
+  DELAY_BEFORE_LOADER,
+  GameModes,
+  GameType,
+  NOTIFICATIONS_STATUSES,
+} from '../constants'
 import { UserInstance } from '../core/user-model'
 import ChooseGameType from './panels/ChooseGameType'
 import { VkPixelTracker } from '../core/trackers/VkPixelTracker'
@@ -26,10 +31,16 @@ import {
   GameDefinitionInstance,
 } from '../models/game-definition-model'
 import { ApiService } from '../core/ApiService'
+import { URLUtils } from '../URLUtils'
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState<UserInstance | null>(null)
-  const [popout, setPopout] = useState<JSX.Element | null>(<ScreenSpinner />)
+  const [loadingUser, setLoadingUser] = useState(false)
+  const [loadingMultiplayerGameDef, setLoadingMultiplayerGameDef] = useState(
+    false
+  )
+  const [loadingTooLong, setLoadingTooLong] = useState(false)
+  const [popout, setPopout] = useState<JSX.Element | null>(null)
   const [activeStory, setActiveStory] = useState('game')
   const [activePanel, setActivePanel] = useState('home')
   const [battle, setBattle] = useState<GameInstance | null>(null)
@@ -81,6 +92,7 @@ const App = (): JSX.Element => {
   }, [])
 
   async function fetchUser(isInitialRequest: boolean) {
+    setLoadingUser(true)
     try {
       const fetchedUser = await AppService.fetchUserData()
       setUser(fetchedUser)
@@ -94,12 +106,37 @@ const App = (): JSX.Element => {
         trackers.identify(fetchedUser.id, fetchedUser.vkId)
       }
     } finally {
-      setPopout(null)
+      setLoadingUser(false)
     }
   }
 
   useEffect(() => {
     fetchUser(true)
+  }, [])
+
+  useEffect(() => {
+    const fetchGameDef = async (gameDefId) => {
+      setLoadingMultiplayerGameDef(true)
+      try {
+        const gameDefinition = await ApiService.get<GameDefinitionInstance>(
+          `game_definition/${gameDefId}`,
+          { Model: GameDefinition }
+        )
+        setMultiplayerDameDef(gameDefinition)
+        setActivePanel('lobby')
+      } catch (e) {
+        if (e.message === 'Страница не найдена.')
+          throw new Error('Игра для подключения не найдена')
+        else throw e
+      } finally {
+        setLoadingMultiplayerGameDef(false)
+      }
+    }
+
+    const joinGameDefId = URLUtils.getHashParam('gid')
+    if (joinGameDefId) {
+      fetchGameDef(joinGameDefId)
+    }
   }, [])
 
   const onFinishGame = async (localBattle: GameInstance) => {
@@ -143,6 +180,24 @@ const App = (): JSX.Element => {
     setActivePanel('scoreboard-home')
   }
 
+  const loading = loadingUser || loadingMultiplayerGameDef
+
+  useEffect(() => {
+    let timerId: number
+    if (loading)
+      timerId = window.setTimeout(() => {
+        setLoadingTooLong(true)
+      }, DELAY_BEFORE_LOADER)
+    else setLoadingTooLong(false)
+    return () => {
+      clearTimeout(timerId)
+    }
+  }, [loading])
+
+  let popoutToRender: JSX.Element | null = null
+  if (popout) popoutToRender = popout
+  else if (loading && loadingTooLong) popoutToRender = <ScreenSpinner />
+
   return (
     <Epic
       activeStory={activeStory}
@@ -168,7 +223,7 @@ const App = (): JSX.Element => {
         </Tabbar>
       }
     >
-      <View id="game" activePanel={activePanel} popout={popout}>
+      <View id="game" activePanel={activePanel} popout={popoutToRender}>
         <Panel id="home">
           <Home
             user={user}
