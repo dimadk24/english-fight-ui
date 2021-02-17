@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { PanelSpinner } from '@vkontakte/vkui'
+import { DELAY_BEFORE_LOADER } from '../../constants'
 
 type Props = {
   delay?: number
@@ -7,7 +8,7 @@ type Props = {
 }
 
 function Loader({
-  delay = 200,
+  delay = DELAY_BEFORE_LOADER,
   render = () => <PanelSpinner size="large" />,
 }: Props): JSX.Element {
   const [pastDelay, setPastDelay] = useState(false)

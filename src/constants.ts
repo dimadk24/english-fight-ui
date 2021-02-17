@@ -16,3 +16,5 @@ export enum GameModes {
   single = 'single',
   multi = 'multi',
 }
+
+export const DELAY_BEFORE_LOADER = 200
