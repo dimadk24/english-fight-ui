@@ -84,6 +84,7 @@ jobs:
       REACT_APP_POSTHOG_ID: ${{secrets.POSTHOG_ID}}
       REACT_APP_METRIKA_ID: ${{secrets.METRIKA_ID}}
       REACT_APP_VK_PIXEL_ID: ${{secrets.VK_PIXEL_ID}}
+      REACT_APP_GOOGLE_ANALYTICS_ID: ${{secrets.GOOGLE_ANALYTICS_ID}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

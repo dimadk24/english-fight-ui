@@ -3,9 +3,10 @@ import { MetrikaTracker } from './MetrikaTracker'
 import { PosthogTracker } from './PosthogTracker'
 import { LocalTracker } from './LocalTracker'
 import { VkPixelTracker } from './VkPixelTracker'
+import { GoogleAnalyticsTracker } from './GoogleAnalyticsTracker'
 
 const registeredTrackers = Utils.isProductionMode
-  ? [MetrikaTracker, PosthogTracker, VkPixelTracker]
+  ? [MetrikaTracker, PosthogTracker, VkPixelTracker, GoogleAnalyticsTracker]
   : [LocalTracker]
 
 function call(method: string, ...args: Array<unknown>) {
