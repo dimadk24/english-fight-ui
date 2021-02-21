@@ -1,8 +1,12 @@
 import posthog from 'posthog-js'
 import { timeout } from 'promise-timeout'
 import { createTracker, TrackerInterface } from './tracker-utils'
+import pickBy from 'lodash.pickby'
+import { URLUtils } from '../../URLUtils'
 
-let initPromise = null
+const POSTHOG_ID = process.env.REACT_APP_POSTHOG_ID
+
+let initPromise: Promise<void> | null = null
 
 async function waitForInit(): Promise<void> {
   if (initPromise === null) {
@@ -14,7 +18,7 @@ async function waitForInit(): Promise<void> {
 export const PosthogTracker: TrackerInterface = createTracker({
   init(): Promise<void> {
     initPromise = new Promise<void>((res) => {
-      posthog.init(process.env.REACT_APP_POSTHOG_ID, {
+      posthog.init(POSTHOG_ID, {
         autocapture: false,
         loaded: () => res(),
       })
@@ -24,8 +28,14 @@ export const PosthogTracker: TrackerInterface = createTracker({
 
   async identify(id: number, vkId: number): Promise<void> {
     await waitForInit()
-    posthog.identify(String(id))
-    posthog.people.set({ vkId })
+    const userParams = pickBy(
+      {
+        'utm source': URLUtils.getHashParam('utm_source'),
+      },
+      (param) => param
+    )
+    posthog.identify(String(id), { vkId, ...userParams })
+    posthog.register(userParams)
   },
 
   async reachGoal(
