@@ -2,6 +2,7 @@ import { createTracker, TrackerInterface } from './tracker-utils'
 import pickBy from 'lodash.pickby'
 import { URLUtils } from '../../URLUtils'
 import { timeout } from 'promise-timeout'
+import { toSnake } from 'convert-keys'
 
 const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
 
@@ -51,17 +52,22 @@ export const GoogleAnalyticsTracker: TrackerInterface = createTracker({
     await waitForInit()
     const userParams = pickBy(
       {
-        'utm source': URLUtils.getHashParam('utm_source'),
+        utmSource: URLUtils.getHashParam('utm_source'),
       },
       (param) => param
     )
     try {
       // @ts-ignore
-      gtag('set', 'user_properties', {
-        id,
-        'vk id': vkId,
-        ...userParams,
-      })
+      gtag(
+        'set',
+        'user_properties',
+        // Google Analytics does not support spaces in user properties
+        toSnake({
+          id,
+          vkId,
+          ...userParams,
+        })
+      )
     } catch (e) {
       console.log('Seems like Google analytics is blocked')
       console.warn(e)
