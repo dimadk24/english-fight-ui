@@ -114,8 +114,16 @@ const App = (): JSX.Element => {
     fetchUser(true)
   }, [])
 
+  const joinedMultiplayerGame = ({
+    instance,
+  }: {
+    instance: GameDefinitionInstance
+  }) => {
+    setMultiplayerDameDef(instance)
+  }
+
   useEffect(() => {
-    const fetchGameDef = async (gameDefId) => {
+    const joinMultiplayerGame = async (gameDefId) => {
       setLoadingMultiplayerGameDef(true)
       try {
         const gameDefinition = await ApiService.get<GameDefinitionInstance>(
@@ -124,6 +132,9 @@ const App = (): JSX.Element => {
         )
         setMultiplayerDameDef(gameDefinition)
         setActivePanel('lobby')
+        ApiService.openSocketConnection(`multiplayer-game/${gameDefId}`, {
+          joinedGame: joinedMultiplayerGame,
+        })
       } catch (e) {
         if (e.message === 'Страница не найдена.')
           throw new Error('Игра для подключения не найдена')
@@ -135,7 +146,7 @@ const App = (): JSX.Element => {
 
     const joinGameDefId = URLUtils.getHashParam('gid')
     if (joinGameDefId) {
-      fetchGameDef(joinGameDefId)
+      joinMultiplayerGame(joinGameDefId)
     }
   }, [])
 
@@ -155,22 +166,29 @@ const App = (): JSX.Element => {
     setActivePanel('choose-game-type')
   }
 
-  async function createMultiplayerGameDefinition(gameDefType) {
+  async function createMultiplayerGameDefinition(
+    gameDefType
+  ): Promise<GameDefinitionInstance> {
     const createdGameDefinition = await ApiService.post<GameDefinitionInstance>(
       'game_definition',
       { type: gameDefType },
       { Model: GameDefinition }
     )
     setMultiplayerDameDef(createdGameDefinition)
+    return createdGameDefinition
   }
 
-  const onStartGame = (chosenGameType: GameType) => {
+  const onStartGame = async (chosenGameType: GameType) => {
     if (chosenGameType !== gameType) setGameType(chosenGameType)
     if (gameMode === GameModes.single) {
       setActivePanel('battle')
     } else {
-      createMultiplayerGameDefinition(chosenGameType)
+      const gameDefPromise = createMultiplayerGameDefinition(chosenGameType)
       setActivePanel('lobby')
+      const gameDef = await gameDefPromise
+      ApiService.openSocketConnection(`multiplayer-game/${gameDef.id}`, {
+        joinedGame: joinedMultiplayerGame,
+      })
     }
     trackers.reachGoal('start-game', { type: chosenGameType, mode: gameMode })
   }
