@@ -1,5 +1,7 @@
 import fromJSON from 'tcomb/lib/fromJSON'
 import { Struct, struct, StructProps } from 'tcomb'
+import camelCase from 'lodash.camelcase'
+import upperFirst from 'lodash.upperfirst'
 
 function getFromObject<T>(Model: ModelType<T>) {
   return function fromObject(object: Record<string, unknown>) {
@@ -14,6 +16,8 @@ function set(key: string, value: unknown) {
     },
   })
 }
+
+const models = new Map()
 
 export interface ModelType<T> extends Struct<T> {
   fromObject(object: Record<string, unknown>): T
@@ -37,6 +41,8 @@ export function createModel<T>(
   Model.fromObject = getFromObject<T>(Model)
   Model.prototype.set = set
 
+  models.set(name, Model)
+
   return Model
 }
 
@@ -52,4 +58,15 @@ export function extendModel<T>(
   Model.prototype.set = set
 
   return Model
+}
+
+export function getModelByName(
+  name: string
+): ModelType<Record<string, unknown>> {
+  const modelName = upperFirst(camelCase(name))
+  if (!models.has(modelName))
+    throw new Error(
+      `No model with name "${modelName}" (converted from "${name}") found`
+    )
+  return models.get(modelName)
 }

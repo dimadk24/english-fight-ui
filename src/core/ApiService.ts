@@ -1,13 +1,41 @@
 import { timeout } from 'promise-timeout'
 import { toCamel, toSnake } from 'convert-keys'
 import castArray from 'lodash.castarray'
-import { ModelType } from './model-utils'
+import { getModelByName, ModelInstance, ModelType } from './model-utils'
 import { Utils } from '../Utils'
 import { URLUtils } from '../URLUtils'
+import camelCase from 'lodash.camelcase'
 
 const API_HOST = process.env.REACT_APP_API_HOST
+const isApiUsingSSL = API_HOST.includes('https://')
+const websocketProtocol = isApiUsingSSL ? 'wss://' : 'ws://'
+const INTERNAL_SERVER_ERROR = 'Внутренняя ошибка сервера'
+
+const websocketCloseCodeToError = {
+  3000: 'Не авторизован',
+}
 
 type Data = Record<string, unknown>
+
+type WSInputData = {
+  type: string
+  model?: string
+  data?: Data
+  instance?: Data
+}
+
+type SocketProps =
+  | {
+      onMessage?(data: unknown): void
+      onOpen?(ev: Event): void
+      onClose?(event: CloseEvent): void
+      onError?(): void
+    }
+  | Record<string, (data: unknown) => void>
+
+export interface JsonWebSocket extends WebSocket {
+  sendJson(data: Data): void
+}
 
 export class ApiService {
   static async post<T>(
@@ -86,6 +114,83 @@ export class ApiService {
     return ApiService.processResponse<T>(response, Model)
   }
 
+  static openSocketConnection(
+    url: string,
+    {
+      onMessage = () => {},
+      onOpen = () => {},
+      onClose = () => {},
+      onError = () => {},
+      ...customEventListeners
+    }: SocketProps
+  ): JsonWebSocket {
+    const fullUrl = ApiService.createFullSocketURL(url)
+
+    const parseAndCallOnMessage = (event: MessageEvent) => {
+      const inputData: WSInputData = JSON.parse(event.data)
+      let parsedInstance: ModelInstance | null = null
+      if (inputData.instance) {
+        const Model: ModelType<Record<string, unknown>> | null = getModelByName(
+          inputData.model
+        )
+        parsedInstance = ApiService.convertDataToFrontendFormat<ModelInstance>(
+          inputData.instance,
+          Model
+        )
+      }
+
+      const eventName: string = camelCase(inputData.type)
+      const hasCustomListener = Object.prototype.hasOwnProperty.call(
+        customEventListeners,
+        eventName
+      )
+      const props = {
+        type: inputData.type,
+        data: inputData.data || null,
+        instance: parsedInstance,
+      }
+      if (hasCustomListener) {
+        customEventListeners[eventName](props)
+      }
+
+      onMessage(props)
+    }
+
+    const throwOnClose = (e: CloseEvent) => {
+      const userFriendlyMessage =
+        websocketCloseCodeToError[e.code] || INTERNAL_SERVER_ERROR
+      throw new Error(userFriendlyMessage)
+    }
+
+    const throwOnError = () => {
+      throw new Error('Неизвестная ошибка соединения')
+    }
+
+    const socket: WebSocket = new WebSocket(fullUrl)
+    socket.addEventListener('message', parseAndCallOnMessage)
+    socket.addEventListener('close', throwOnClose)
+    socket.addEventListener('close', onClose)
+    socket.addEventListener('error', throwOnError)
+    socket.addEventListener('error', onError)
+
+    // @ts-ignore
+    socket.sendJson = function sendJson(data: Data) {
+      this.send(JSON.stringify(data))
+    }
+    const jsonSocket = <JsonWebSocket>socket
+
+    const authenticate = () => {
+      jsonSocket.sendJson({
+        type: 'authenticate',
+        data: { authorization: ApiService.getAuthorizationHeader() },
+      })
+    }
+    socket.addEventListener('open', authenticate)
+    socket.addEventListener('open', onOpen)
+
+    return jsonSocket
+  }
+
   static createHeaders({
     sendToken,
   }: { sendToken?: boolean } = {}): HeadersInit {
@@ -125,6 +230,13 @@ export class ApiService {
     return ApiService.createFullUrl(`api/${relativeUrl}`, queryParams)
   }
 
+  static createFullSocketURL(relativeUrl: string): string {
+    const fullRelativeUrl = `ws/${relativeUrl}`
+    let domain = ApiService.removeTrailingSlash(API_HOST)
+    domain = domain.slice(domain.indexOf('://') + 3)
+    return `${websocketProtocol}${domain}/${fullRelativeUrl}`
+  }
+
   static createFullUrl(
     relativeUrl: string,
     queryParams?: URLSearchParams
@@ -142,7 +254,7 @@ export class ApiService {
     Model: ModelType<unknown> = null
   ): Promise<T> {
     if (response.status >= 500 && response.status < 600) {
-      throw new Error('Внутренняя ошибка сервера')
+      throw new Error(INTERNAL_SERVER_ERROR)
     }
     let json: {
       detail?: string
