@@ -30,11 +30,11 @@ function Lobby({ gameDefinition, onGoBack }: Props): JSX.Element {
 
   const inviteUrl = `${VK_APP_URL}#gid=${gameDefinition.id}`
 
-  const onCopy = async () => {
-    await bridge.send('VKWebAppCopyText', { text: inviteUrl })
+  const copy = async (text: string) => {
+    await bridge.send('VKWebAppCopyText', { text })
     setCopiedToastVisible(true)
   }
-  const onShare = () => bridge.send('VKWebAppShare', { link: inviteUrl })
+  const shareLink = () => bridge.send('VKWebAppShare', { link: inviteUrl })
 
   const onCloseToast = () => setCopiedToastVisible(false)
 
@@ -43,26 +43,47 @@ function Lobby({ gameDefinition, onGoBack }: Props): JSX.Element {
       <PanelHeader text="Игра с другом" onBackButtonClick={onGoBack} />
       <Group>
         <Div>
-          <div className="input-wrapper">
-            <Input className="invite-url-input" value={inviteUrl} readOnly />
-            <Button
-              onClick={onCopy}
-              className="copy-button"
-              before={<Icon28CopyOutline />}
-            >
-              <span className="button-subtitle">Скопировать</span>
-            </Button>
-            <Button
-              onClick={onShare}
-              className="share-button"
-              before={<Icon28ShareExternalOutline />}
-            >
-              <span className="button-subtitle">Поделиться</span>
-            </Button>
+          <div className="method-wrapper">
+            <div className="invite-help-text">
+              Отправь другому человеку эту ссылку, чтобы он(а) присоединился к
+              игре
+            </div>
+            <div className="input-wrapper">
+              <Input className="invite-url-input" value={inviteUrl} readOnly />
+              <Button
+                onClick={() => copy(inviteUrl)}
+                className="copy-button"
+                before={<Icon28CopyOutline />}
+              >
+                <span className="button-subtitle">Скопировать</span>
+              </Button>
+              <Button
+                onClick={shareLink}
+                className="share-button"
+                before={<Icon28ShareExternalOutline />}
+              >
+                <span className="button-subtitle">Поделиться</span>
+              </Button>
+            </div>
           </div>
-          <div className="invite-url-help-text">
-            Отправь другому человеку эту ссылку, чтобы он(а) присоединился к
-            игре
+          <div className="method-wrapper second-method">
+            <div className="invite-help-text">
+              Еще можно присоединиться по ID игры
+            </div>
+            <div className="input-wrapper">
+              <Input
+                className="invite-url-input"
+                value={gameDefinition.id}
+                readOnly
+              />
+              <Button
+                onClick={() => copy(gameDefinition.id)}
+                className="copy-button"
+                before={<Icon28CopyOutline />}
+              >
+                <span className="button-subtitle">Скопировать</span>
+              </Button>
+            </div>
           </div>
           <div className="loader-wrapper">
             <Loader />
