@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner'
 import Alert from '@vkontakte/vkui/dist/components/Alert/Alert'
 import '@vkontakte/vkui/dist/vkui.css'
@@ -32,6 +32,7 @@ import {
 } from '../models/game-definition-model'
 import { ApiService } from '../core/ApiService'
 import { URLUtils } from '../URLUtils'
+import ChooseMultiplayerGameAction from './panels/ChooseMultiplayerGameAction/ChooseMultiplayerGameAction'
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState<UserInstance | null>(null)
@@ -122,33 +123,33 @@ const App = (): JSX.Element => {
     setMultiplayerDameDef(instance)
   }
 
-  useEffect(() => {
-    const joinMultiplayerGame = async (gameDefId) => {
-      setLoadingMultiplayerGameDef(true)
-      try {
-        const gameDefinition = await ApiService.get<GameDefinitionInstance>(
-          `game_definition/${gameDefId}`,
-          { Model: GameDefinition }
-        )
-        setMultiplayerDameDef(gameDefinition)
-        setActivePanel('lobby')
-        ApiService.openSocketConnection(`multiplayer-game/${gameDefId}`, {
-          joinedGame: joinedMultiplayerGame,
-        })
-      } catch (e) {
-        if (e.message === 'Страница не найдена.')
-          throw new Error('Игра для подключения не найдена')
-        else throw e
-      } finally {
-        setLoadingMultiplayerGameDef(false)
-      }
+  const joinMultiplayerGame = useCallback(async (gameDefId) => {
+    setLoadingMultiplayerGameDef(true)
+    try {
+      const gameDefinition = await ApiService.get<GameDefinitionInstance>(
+        `game_definition/${gameDefId}`,
+        { Model: GameDefinition }
+      )
+      setMultiplayerDameDef(gameDefinition)
+      setActivePanel('lobby')
+      ApiService.openSocketConnection(`multiplayer-game/${gameDefId}`, {
+        joinedGame: joinedMultiplayerGame,
+      })
+    } catch (e) {
+      if (e.message === 'Страница не найдена.')
+        throw new Error('Игра для подключения не найдена')
+      else throw e
+    } finally {
+      setLoadingMultiplayerGameDef(false)
     }
+  }, [])
 
+  useEffect(() => {
     const joinGameDefId = URLUtils.getHashParam('gid')
     if (joinGameDefId) {
       joinMultiplayerGame(joinGameDefId)
     }
-  }, [])
+  }, [joinMultiplayerGame])
 
   const onFinishGame = async (localBattle: GameInstance) => {
     const updatedBattle = await BattleService.getBattle(localBattle.id)
@@ -247,13 +248,30 @@ const App = (): JSX.Element => {
             user={user}
             onStartSingleGame={() => goToChooseGameTypePanel(GameModes.single)}
             onStartMultiplayerGame={() => {
-              goToChooseGameTypePanel(GameModes.multi)
+              setGameMode(GameModes.multi)
+              setActivePanel('choose-multiplayer-game-action')
             }}
             onUpdateUser={(updatedUser) => setUser(updatedUser)}
           />
         </Panel>
+        <Panel id="choose-multiplayer-game-action">
+          <ChooseMultiplayerGameAction
+            onCreateNew={() => {
+              setActivePanel('choose-game-type')
+            }}
+            onJoin={() => {}}
+            onGoBack={goToHomePanel}
+          />
+        </Panel>
         <Panel id="choose-game-type">
-          <ChooseGameType onGoBack={goToHomePanel} onChoose={onStartGame} />
+          <ChooseGameType
+            onGoBack={() => {
+              if (gameMode === GameModes.multi)
+                setActivePanel('choose-multiplayer-game-action')
+              else goToHomePanel()
+            }}
+            onChoose={onStartGame}
+          />
         </Panel>
         <Panel id="lobby">
           <Lobby
