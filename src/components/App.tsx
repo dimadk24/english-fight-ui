@@ -33,6 +33,7 @@ import {
 import { ApiService } from '../core/ApiService'
 import { URLUtils } from '../URLUtils'
 import ChooseMultiplayerGameAction from './panels/ChooseMultiplayerGameAction/ChooseMultiplayerGameAction'
+import JoinMultiplayerGame from './panels/JoinMultiplayerGame/JoinMultiplayerGame'
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState<UserInstance | null>(null)
@@ -259,7 +260,9 @@ const App = (): JSX.Element => {
             onCreateNew={() => {
               setActivePanel('choose-game-type')
             }}
-            onJoin={() => {}}
+            onJoin={() => {
+              setActivePanel('join-multiplayer-game')
+            }}
             onGoBack={goToHomePanel}
           />
         </Panel>
@@ -271,6 +274,16 @@ const App = (): JSX.Element => {
               else goToHomePanel()
             }}
             onChoose={onStartGame}
+          />
+        </Panel>
+        <Panel id="join-multiplayer-game">
+          <JoinMultiplayerGame
+            onJoin={(gameDefinitionId) => {
+              joinMultiplayerGame(gameDefinitionId)
+            }}
+            onBack={() => {
+              setActivePanel('choose-multiplayer-game-action')
+            }}
           />
         </Panel>
         <Panel id="lobby">
