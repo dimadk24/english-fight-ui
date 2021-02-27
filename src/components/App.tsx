@@ -188,9 +188,15 @@ const App = (): JSX.Element => {
       const gameDefPromise = createMultiplayerGameDefinition(chosenGameType)
       setActivePanel('lobby')
       const gameDef = await gameDefPromise
-      ApiService.openSocketConnection(`multiplayer-game/${gameDef.id}`, {
-        joinedGame: joinedMultiplayerGame,
-      })
+      const socket = ApiService.openSocketConnection(
+        `multiplayer-game/${gameDef.id}`,
+        {
+          joinedGame: ({ instance }: { instance: GameDefinitionInstance }) => {
+            joinedMultiplayerGame({ instance })
+            if (instance.players.length === 2) socket.sendEvent('start-game')
+          },
+        }
+      )
     }
     trackers.reachGoal('start-game', { type: chosenGameType, mode: gameMode })
   }
