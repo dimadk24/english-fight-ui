@@ -5,6 +5,7 @@ import { getModelByName, ModelInstance, ModelType } from './model-utils'
 import { Utils } from '../Utils'
 import { URLUtils } from '../URLUtils'
 import camelCase from 'lodash.camelcase'
+import pickBy from 'lodash.pickby'
 
 const API_HOST = process.env.REACT_APP_API_HOST
 const isApiUsingSSL = API_HOST.includes('https://')
@@ -35,6 +36,7 @@ type SocketProps =
 
 export interface JsonWebSocket extends WebSocket {
   sendJson(data: Data): void
+  sendEvent(name: string, data?: Data): void
 }
 
 export class ApiService {
@@ -159,6 +161,9 @@ export class ApiService {
     const throwOnClose = (e: CloseEvent) => {
       const userFriendlyMessage =
         websocketCloseCodeToError[e.code] || INTERNAL_SERVER_ERROR
+      if (!websocketCloseCodeToError[e.code])
+        // eslint-disable-next-line no-console
+        console.error(`Ошибка вебсокета #${e.code}`)
       throw new Error(userFriendlyMessage)
     }
 
@@ -174,15 +179,31 @@ export class ApiService {
     socket.addEventListener('error', onError)
 
     // @ts-ignore
-    socket.sendJson = function sendJson(data: Data) {
+    socket.sendJson = function sendJson(this: JsonWebSocket, data: Data) {
       this.send(JSON.stringify(data))
     }
+    // @ts-ignore
+    socket.sendEvent = function sendEvent(
+      this: JsonWebSocket,
+      name: string,
+      data?: Data
+    ) {
+      this.sendJson(
+        pickBy(
+          {
+            type: name,
+            data,
+          },
+          (value) => value
+        )
+      )
+    }
+
     const jsonSocket = <JsonWebSocket>socket
 
     const authenticate = () => {
-      jsonSocket.sendJson({
-        type: 'authenticate',
-        data: { authorization: ApiService.getAuthorizationHeader() },
+      jsonSocket.sendEvent('authenticate', {
+        authorization: ApiService.getAuthorizationHeader(),
       })
     }
     socket.addEventListener('open', authenticate)
