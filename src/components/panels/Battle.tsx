@@ -11,6 +11,7 @@ import { GameType } from '../../constants'
 const WAIT_TIME_TO_SHOW_CORRECT_ANSWER = 1000
 
 interface PropTypes {
+  game?: GameInstance
   gameType?: GameType
   onGoBack()
   onFinishGame(game: GameInstance)
@@ -20,26 +21,18 @@ const Battle = ({
   onGoBack,
   onFinishGame,
   gameType = null,
+  game = null,
 }: PropTypes): JSX.Element => {
   const [loading, setLoading] = useState(false)
   const [state, dispatch] = useReducer(battleReducer, initialState)
   const { battle, activeQuestion, hasNextQuestion } = state
 
   useEffect(() => {
-    const startBattle = async () => {
-      setLoading(true)
-      try {
-        const fetchedGame = await BattleService.startSinglePlayerGame(gameType)
-        dispatch({
-          type: battleActions.setBattle,
-          payload: fetchedGame,
-        })
-      } finally {
-        setLoading(false)
-      }
-    }
-    if (gameType) startBattle()
-  }, [gameType])
+    dispatch({
+      type: battleActions.setBattle,
+      payload: game,
+    })
+  }, [game])
 
   const onSelectAnswer = async (answer: string) => {
     if (loading) return

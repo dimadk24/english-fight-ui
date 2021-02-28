@@ -41,6 +41,7 @@ const App = (): JSX.Element => {
   const [loadingMultiplayerGameDef, setLoadingMultiplayerGameDef] = useState(
     false
   )
+  const [loadingSinglePlayerGame, setLoadingSinglePlayerGame] = useState(false)
   const [loadingTooLong, setLoadingTooLong] = useState(false)
   const [popout, setPopout] = useState<JSX.Element | null>(null)
   const [activeStory, setActiveStory] = useState('game')
@@ -52,6 +53,7 @@ const App = (): JSX.Element => {
     multiplayerGameDef,
     setMultiplayerDameDef,
   ] = useState<GameDefinitionInstance | null>(null)
+  const [game, setGame] = useState<GameInstance | null>(null)
 
   useEffect(() => {
     if (Utils.isProductionMode) {
@@ -169,7 +171,7 @@ const App = (): JSX.Element => {
   }
 
   async function createMultiplayerGameDefinition(
-    gameDefType
+    gameDefType: GameType
   ): Promise<GameDefinitionInstance> {
     const createdGameDefinition = await ApiService.post<GameDefinitionInstance>(
       'game_definition',
@@ -180,9 +182,22 @@ const App = (): JSX.Element => {
     return createdGameDefinition
   }
 
+  const startSinglePlayerGame = async (chosenGameType: GameType) => {
+    setLoadingSinglePlayerGame(true)
+    try {
+      const fetchedGame = await BattleService.startSinglePlayerGame(
+        chosenGameType
+      )
+      setGame(fetchedGame)
+    } finally {
+      setLoadingSinglePlayerGame(false)
+    }
+  }
+
   const onStartGame = async (chosenGameType: GameType) => {
     if (chosenGameType !== gameType) setGameType(chosenGameType)
     if (gameMode === GameModes.single) {
+      await startSinglePlayerGame(chosenGameType)
       setActivePanel('battle')
     } else {
       const gameDefPromise = createMultiplayerGameDefinition(chosenGameType)
@@ -206,7 +221,8 @@ const App = (): JSX.Element => {
     setActivePanel('scoreboard-home')
   }
 
-  const loading = loadingUser || loadingMultiplayerGameDef
+  const loading =
+    loadingUser || loadingMultiplayerGameDef || loadingSinglePlayerGame
 
   useEffect(() => {
     let timerId: number
@@ -303,6 +319,7 @@ const App = (): JSX.Element => {
             onGoBack={() => goToChooseGameTypePanel(gameMode)}
             onFinishGame={onFinishGame}
             gameType={gameType}
+            game={game}
           />
         </Panel>
         <Panel id="results">
