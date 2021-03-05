@@ -80,8 +80,8 @@ const App = (): JSX.Element => {
         ) {
           setUser(await AppService.blockNotifications())
         }
+        trackers.identify(fetchedUser.id, fetchedUser.vkId)
       }
-      trackers.identify(fetchedUser.id, fetchedUser.vkId)
     } finally {
       setPopout(null)
     }
