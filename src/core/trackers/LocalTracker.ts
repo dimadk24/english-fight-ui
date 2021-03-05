@@ -14,6 +14,7 @@ export const LocalTracker: TrackerInterface = createTracker({
     name: string,
     params?: Record<string, unknown>
   ): Promise<void> {
-    console.log(`Reach goal ${name} with params`, params)
+    if (!params) console.log(`Reach goal ${name}`)
+    else console.log(`Reach goal ${name} with params`, params)
   },
 })
