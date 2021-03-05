@@ -126,26 +126,52 @@ const App = (): JSX.Element => {
     setMultiplayerDameDef(instance)
   }
 
-  const joinMultiplayerGame = useCallback(async (gameDefId) => {
-    setLoadingMultiplayerGameDef(true)
-    try {
-      const gameDefinition = await ApiService.get<GameDefinitionInstance>(
-        `game_definition/${gameDefId}`,
-        { Model: GameDefinition }
-      )
-      setMultiplayerDameDef(gameDefinition)
-      setActivePanel('lobby')
-      ApiService.openSocketConnection(`multiplayer-game/${gameDefId}`, {
-        joinedGame: joinedMultiplayerGame,
-      })
-    } catch (e) {
-      if (e.message === 'Страница не найдена.')
-        throw new Error('Игра для подключения не найдена')
-      else throw e
-    } finally {
-      setLoadingMultiplayerGameDef(false)
-    }
-  }, [])
+  const startedMultiplayerGame = useCallback(
+    async (
+      { instance }: { instance: GameInstance },
+      joinedTimestamp?: number
+    ) => {
+      setGame(instance)
+      if (joinedTimestamp) {
+        const SWITCH_PANEL_TIME = 800 // ms
+        // workaround https://github.com/VKCOM/VKUI/issues/177
+        await Utils.waitTillTimestamp(joinedTimestamp + SWITCH_PANEL_TIME)
+      }
+      setActivePanel('battle')
+    },
+    []
+  )
+
+  const joinMultiplayerGame = useCallback(
+    async (gameDefId) => {
+      setLoadingMultiplayerGameDef(true)
+      try {
+        const gameDefinition = await ApiService.get<GameDefinitionInstance>(
+          `game_definition/${gameDefId}`,
+          { Model: GameDefinition }
+        )
+        setMultiplayerDameDef(gameDefinition)
+        const joinedMultiplayerGameTimestamp = new Date().getTime()
+        setActivePanel('lobby')
+        setGameType(gameDefinition.type)
+        ApiService.openSocketConnection(`multiplayer-game/${gameDefId}`, {
+          joinedGame: joinedMultiplayerGame,
+          startedGame: ({ instance }: { instance: GameInstance }) =>
+            startedMultiplayerGame(
+              { instance },
+              joinedMultiplayerGameTimestamp
+            ),
+        })
+      } catch (e) {
+        if (e.message === 'Страница не найдена.')
+          throw new Error('Игра для подключения не найдена')
+        else throw e
+      } finally {
+        setLoadingMultiplayerGameDef(false)
+      }
+    },
+    [startedMultiplayerGame]
+  )
 
   useEffect(() => {
     const joinGameDefId = URLUtils.getHashParam('gid')
@@ -210,6 +236,7 @@ const App = (): JSX.Element => {
             joinedMultiplayerGame({ instance })
             if (instance.players.length === 2) socket.sendEvent('start-game')
           },
+          startedGame: startedMultiplayerGame,
         }
       )
     }
@@ -319,6 +346,7 @@ const App = (): JSX.Element => {
             onGoBack={() => goToChooseGameTypePanel(gameMode)}
             onFinishGame={onFinishGame}
             gameType={gameType}
+            gameMode={gameMode}
             game={game}
           />
         </Panel>
