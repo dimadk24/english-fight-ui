@@ -66,6 +66,7 @@ const App = (): JSX.Element => {
       })
     }
     trackers.init()
+    trackers.reachGoal('open app')
   }, [])
 
   async function fetchUser(isInitialRequest: boolean) {
