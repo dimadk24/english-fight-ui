@@ -1,4 +1,4 @@
-.Alert__content p.error-message {
+:local(.errorMessage) {
   font-size: larger;
   margin: 15px 0;
 }
