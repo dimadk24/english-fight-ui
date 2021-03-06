@@ -6,7 +6,7 @@ import { AppService } from './AppService'
 import './constant-styles.css'
 import { Utils } from '../Utils'
 import * as Sentry from '@sentry/react'
-import './App.css'
+import styles from './App.module.css'
 import { trackers } from '../core/trackers/trackers'
 import { Epic, Panel, Tabbar, TabbarItem, View } from '@vkontakte/vkui'
 import { GameInstance } from '../models/game-model'
@@ -81,7 +81,7 @@ const App = (): JSX.Element => {
               >
                 <h2>Возникла ошибка =(</h2>
                 {errorMessage && (
-                  <p className="error-message">{errorMessage}</p>
+                  <p className={styles.errorMessage}>{errorMessage}</p>
                 )}
                 <p>Попробуй еще раз</p>
               </Alert>
