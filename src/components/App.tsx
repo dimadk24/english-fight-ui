@@ -13,7 +13,7 @@ import { GameInstance } from '../models/game-model'
 import { BattleService } from './panels/BattleService'
 import Home from './panels/Home'
 import Battle from './panels/Battle'
-import Results from './panels/Results'
+import SingleplayerResults from './panels/SingleplayerResults'
 import { Icon28HomeOutline, Icon28UsersOutline } from '@vkontakte/icons'
 import ScoreboardHome from './panels/ScoreboardHome'
 import {
@@ -351,7 +351,7 @@ const App = (): JSX.Element => {
           />
         </Panel>
         <Panel id="results">
-          <Results
+          <SingleplayerResults
             user={user}
             onRetry={() => onStartGame(gameType)}
             onGoBack={goToHomePanel}

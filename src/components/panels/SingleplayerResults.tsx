@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import PropTypes, { InferProps } from 'prop-types'
 import PanelHeader from '../helpers/PanelHeader'
 import Cell from '@vkontakte/vkui/dist/components/Cell/Cell'
 import Counter from '@vkontakte/vkui/dist/components/Counter/Counter'
@@ -14,14 +13,24 @@ import { AppService } from '../AppService'
 import { Card, CardGrid, Div } from '@vkontakte/vkui'
 import Loader from '../helpers/Loader'
 import { Icon24Cancel } from '@vkontakte/icons'
+import { UserInstance } from '../../core/user-model'
+import { GameInstance } from '../../models/game-model'
 
-function Results({
-  user,
+type Props = {
+  user: UserInstance
+  onGoBack(): void
+  onRetry(): void
+  battle: GameInstance
+  onUpdateUser(user: UserInstance): void
+}
+
+function SingleplayerResults({
+  user = null,
   onGoBack,
-  battle,
+  battle = null,
   onRetry,
   onUpdateUser,
-}: InferProps<typeof Results.propTypes>): JSX.Element {
+}: Props): JSX.Element {
   const { questions, points } = battle
   const correctAnswersNumber = questions.filter(({ isCorrect }) => isCorrect)
     .length
@@ -136,32 +145,4 @@ function Results({
   )
 }
 
-Results.propTypes = {
-  user: PropTypes.shape({
-    photoUrl: PropTypes.string.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    score: PropTypes.number.isRequired,
-    foreverRank: PropTypes.number.isRequired,
-    monthlyRank: PropTypes.number.isRequired,
-    notificationsStatus: PropTypes.string.isRequired,
-  }),
-  onGoBack: PropTypes.func.isRequired,
-  onRetry: PropTypes.func.isRequired,
-  battle: PropTypes.shape({
-    points: PropTypes.number.isRequired,
-    questions: PropTypes.arrayOf(
-      PropTypes.shape({
-        isCorrect: PropTypes.bool.isRequired,
-      })
-    ).isRequired,
-  }),
-  onUpdateUser: PropTypes.func.isRequired,
-}
-
-Results.defaultProps = {
-  user: null,
-  battle: null,
-}
-
-export default Results
+export default SingleplayerResults
