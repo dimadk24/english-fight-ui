@@ -18,5 +18,5 @@
     "strict": false,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src"]
+  "include": ["src", ".eslintrc.js"]
 }
