@@ -1,0 +1,55 @@
+.headerRow {
+  display: flex;
+  color: #595959;
+  font-weight: 500;
+}
+
+.answersHeader {
+  margin: 0 25px 0 auto;
+}
+
+.nameHeader {
+  margin-left: 40px;
+}
+
+.dataRowWrapper {
+  border-top: 1px solid #bfbfbf;
+}
+
+.dataRowWrapper:last-child {
+  border-bottom: 1px solid #bfbfbf;
+}
+
+.dataRow {
+  display: flex;
+  align-items: center;
+}
+
+.name {
+  margin: 0 12px;
+}
+
+.answers {
+  margin-right: 80px;
+  margin-left: auto;
+}
+
+@media (max-width: 360px) {
+  .nameHeader {
+    margin-left: 20px;
+  }
+
+  .answers {
+    margin-right: 60px;
+  }
+}
+
+@media (max-width: 330px) {
+  .nameHeader {
+    margin-left: 10px;
+  }
+
+  .answers {
+    margin-right: 40px;
+  }
+}

@@ -140,6 +140,10 @@ export class ApiService {
           Model
         )
       }
+      let parsedData: Data | null = null
+      if (inputData.data) {
+        parsedData = ApiService.convertDataToFrontendFormat(inputData.data)
+      }
 
       const eventName: string = camelCase(inputData.type)
       const hasCustomListener = Object.prototype.hasOwnProperty.call(
@@ -148,7 +152,7 @@ export class ApiService {
       )
       const props = {
         type: inputData.type,
-        data: inputData.data || null,
+        data: parsedData,
         instance: parsedInstance,
       }
       if (hasCustomListener) {
