@@ -34,6 +34,11 @@ import { ApiService } from '../core/ApiService'
 import { URLUtils } from '../URLUtils'
 import ChooseMultiplayerGameAction from './panels/ChooseMultiplayerGameAction/ChooseMultiplayerGameAction'
 import JoinMultiplayerGame from './panels/JoinMultiplayerGame/JoinMultiplayerGame'
+import MultiplayerResults, {
+  MultiplayerResultItem,
+} from './panels/MultiplayerResults/MultiplayerResults'
+import { ScoreboardUserInstance } from '../models/scoreboard-user-model'
+import { FinishedGameData } from '../websocket-data-types'
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState<UserInstance | null>(null)
@@ -54,6 +59,9 @@ const App = (): JSX.Element => {
     setMultiplayerDameDef,
   ] = useState<GameDefinitionInstance | null>(null)
   const [game, setGame] = useState<GameInstance | null>(null)
+  const [multiplayerFinishedItems, setMultiplayerFinishedItems] = useState<
+    MultiplayerResultItem[]
+  >([])
 
   useEffect(() => {
     if (Utils.isProductionMode) {
@@ -133,11 +141,30 @@ const App = (): JSX.Element => {
     ) => {
       setGame(instance)
       if (joinedTimestamp) {
-        const SWITCH_PANEL_TIME = 800 // ms
+        const SWITCH_PANEL_TIME = 900 // ms
         // workaround https://github.com/VKCOM/VKUI/issues/177
         await Utils.waitTillTimestamp(joinedTimestamp + SWITCH_PANEL_TIME)
       }
       setActivePanel('battle')
+    },
+    []
+  )
+
+  const finishedMultiplayerGame = useCallback(
+    ({
+      instance,
+      data,
+    }: {
+      instance: ScoreboardUserInstance
+      data: FinishedGameData
+    }) => {
+      setMultiplayerFinishedItems((currentItems) => [
+        ...currentItems,
+        {
+          user: instance,
+          ...data,
+        },
+      ])
     },
     []
   )
@@ -161,6 +188,7 @@ const App = (): JSX.Element => {
               { instance },
               joinedMultiplayerGameTimestamp
             ),
+          finishedGame: finishedMultiplayerGame,
         })
       } catch (e) {
         if (e.message === 'Страница не найдена.')
@@ -170,7 +198,7 @@ const App = (): JSX.Element => {
         setLoadingMultiplayerGameDef(false)
       }
     },
-    [startedMultiplayerGame]
+    [startedMultiplayerGame, finishedMultiplayerGame]
   )
 
   useEffect(() => {
@@ -237,6 +265,7 @@ const App = (): JSX.Element => {
             if (instance.players.length === 2) socket.sendEvent('start-game')
           },
           startedGame: startedMultiplayerGame,
+          finishedGame: finishedMultiplayerGame,
         }
       )
     }
@@ -351,13 +380,21 @@ const App = (): JSX.Element => {
           />
         </Panel>
         <Panel id="results">
-          <SingleplayerResults
-            user={user}
-            onRetry={() => onStartGame(gameType)}
-            onGoBack={goToHomePanel}
-            battle={battle}
-            onUpdateUser={(updatedUser) => setUser(updatedUser)}
-          />
+          {gameMode === GameModes.single && (
+            <SingleplayerResults
+              user={user}
+              onRetry={() => onStartGame(gameType)}
+              onGoBack={goToHomePanel}
+              battle={battle}
+              onUpdateUser={(updatedUser) => setUser(updatedUser)}
+            />
+          )}
+          {gameMode === GameModes.multi && (
+            <MultiplayerResults
+              onGoBack={goToHomePanel}
+              items={multiplayerFinishedItems}
+            />
+          )}
         </Panel>
       </View>
       <View id="scoreboard" activePanel={activePanel} popout={popout}>
