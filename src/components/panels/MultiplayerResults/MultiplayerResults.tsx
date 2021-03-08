@@ -4,6 +4,7 @@ import PanelHeader from '../../helpers/PanelHeader'
 import { Cell, Group } from '@vkontakte/vkui'
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar'
 import styles from './MultiplayerResults.module.css'
+import Loader from '../../helpers/Loader'
 
 export type MultiplayerResultItem = {
   user: ScoreboardUserInstance
@@ -15,9 +16,16 @@ export type MultiplayerResultItem = {
 type Props = {
   onGoBack(): void
   items: MultiplayerResultItem[]
+  playersNumber: number
 }
 
-function MultiplayerResults({ onGoBack, items }: Props): JSX.Element {
+function MultiplayerResults({
+  onGoBack,
+  items,
+  playersNumber,
+}: Props): JSX.Element {
+  const loaderText =
+    playersNumber === 2 ? 'ожидаем другого игрока' : 'ожидаем других игроков'
   return (
     <>
       <PanelHeader text="Результаты" onBackButtonClick={onGoBack} />
@@ -45,6 +53,12 @@ function MultiplayerResults({ onGoBack, items }: Props): JSX.Element {
             )
           )}
         </div>
+        {items.length < playersNumber && (
+          <>
+            <Loader />
+            <div className={styles.loaderText}>{loaderText}</div>
+          </>
+        )}
       </Group>
     </>
   )
