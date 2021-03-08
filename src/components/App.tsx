@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner'
 import Alert from '@vkontakte/vkui/dist/components/Alert/Alert'
 import '@vkontakte/vkui/dist/vkui.css'
@@ -30,7 +30,7 @@ import {
   GameDefinition,
   GameDefinitionInstance,
 } from '../models/game-definition-model'
-import { ApiService } from '../core/ApiService'
+import { ApiService, JsonWebSocket } from '../core/ApiService'
 import { URLUtils } from '../URLUtils'
 import ChooseMultiplayerGameAction from './panels/ChooseMultiplayerGameAction/ChooseMultiplayerGameAction'
 import JoinMultiplayerGame from './panels/JoinMultiplayerGame/JoinMultiplayerGame'
@@ -39,6 +39,7 @@ import MultiplayerResults, {
 } from './panels/MultiplayerResults/MultiplayerResults'
 import { ScoreboardUserInstance } from '../models/scoreboard-user-model'
 import { FinishedGameData } from '../websocket-data-types'
+import useStateRef from '../core/hooks/use-state-ref'
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState<UserInstance | null>(null)
@@ -57,11 +58,13 @@ const App = (): JSX.Element => {
   const [
     multiplayerGameDef,
     setMultiplayerDameDef,
-  ] = useState<GameDefinitionInstance | null>(null)
+    multiplayerGameDefRef,
+  ] = useStateRef<GameDefinitionInstance | null>(null)
   const [game, setGame] = useState<GameInstance | null>(null)
   const [multiplayerFinishedItems, setMultiplayerFinishedItems] = useState<
     MultiplayerResultItem[]
   >([])
+  const multiplayerSocket = useRef<JsonWebSocket | null>(null)
 
   useEffect(() => {
     if (Utils.isProductionMode) {
@@ -126,13 +129,12 @@ const App = (): JSX.Element => {
     fetchUser(true)
   }, [])
 
-  const joinedMultiplayerGame = ({
-    instance,
-  }: {
-    instance: GameDefinitionInstance
-  }) => {
-    setMultiplayerDameDef(instance)
-  }
+  const joinedMultiplayerGame = useCallback(
+    ({ instance }: { instance: GameDefinitionInstance }) => {
+      setMultiplayerDameDef(instance)
+    },
+    [setMultiplayerDameDef]
+  )
 
   const startedMultiplayerGame = useCallback(
     async (
@@ -158,15 +160,23 @@ const App = (): JSX.Element => {
       instance: ScoreboardUserInstance
       data: FinishedGameData
     }) => {
-      setMultiplayerFinishedItems((currentItems) => [
-        ...currentItems,
-        {
-          user: instance,
-          ...data,
-        },
-      ])
+      setMultiplayerFinishedItems((currentItems) => {
+        if (
+          currentItems.length ===
+          multiplayerGameDefRef.current.players.length - 1
+        ) {
+          multiplayerSocket.current.close()
+        }
+        return [
+          ...currentItems,
+          {
+            user: instance,
+            ...data,
+          },
+        ]
+      })
     },
-    []
+    [multiplayerGameDefRef, multiplayerSocket]
   )
 
   const joinMultiplayerGame = useCallback(
@@ -181,15 +191,18 @@ const App = (): JSX.Element => {
         const joinedMultiplayerGameTimestamp = new Date().getTime()
         setActivePanel('lobby')
         setGameType(gameDefinition.type)
-        ApiService.openSocketConnection(`multiplayer-game/${gameDefId}`, {
-          joinedGame: joinedMultiplayerGame,
-          startedGame: ({ instance }: { instance: GameInstance }) =>
-            startedMultiplayerGame(
-              { instance },
-              joinedMultiplayerGameTimestamp
-            ),
-          finishedGame: finishedMultiplayerGame,
-        })
+        multiplayerSocket.current = ApiService.openSocketConnection(
+          `multiplayer-game/${gameDefId}`,
+          {
+            joinedGame: joinedMultiplayerGame,
+            startedGame: ({ instance }: { instance: GameInstance }) =>
+              startedMultiplayerGame(
+                { instance },
+                joinedMultiplayerGameTimestamp
+              ),
+            finishedGame: finishedMultiplayerGame,
+          }
+        )
       } catch (e) {
         if (e.message === 'Страница не найдена.')
           throw new Error('Игра для подключения не найдена')
@@ -198,7 +211,12 @@ const App = (): JSX.Element => {
         setLoadingMultiplayerGameDef(false)
       }
     },
-    [startedMultiplayerGame, finishedMultiplayerGame]
+    [
+      startedMultiplayerGame,
+      finishedMultiplayerGame,
+      joinedMultiplayerGame,
+      setMultiplayerDameDef,
+    ]
   )
 
   useEffect(() => {
@@ -257,12 +275,13 @@ const App = (): JSX.Element => {
       const gameDefPromise = createMultiplayerGameDefinition(chosenGameType)
       setActivePanel('lobby')
       const gameDef = await gameDefPromise
-      const socket = ApiService.openSocketConnection(
+      multiplayerSocket.current = ApiService.openSocketConnection(
         `multiplayer-game/${gameDef.id}`,
         {
           joinedGame: ({ instance }: { instance: GameDefinitionInstance }) => {
             joinedMultiplayerGame({ instance })
-            if (instance.players.length === 2) socket.sendEvent('start-game')
+            if (instance.players.length === 2)
+              multiplayerSocket.current.sendEvent('start-game')
           },
           startedGame: startedMultiplayerGame,
           finishedGame: finishedMultiplayerGame,
