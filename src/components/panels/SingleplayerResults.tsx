@@ -6,7 +6,6 @@ import Group from '@vkontakte/vkui/dist/components/Group/Group'
 import Header from '@vkontakte/vkui/dist/components/Header/Header'
 import Button from '@vkontakte/vkui/dist/components/Button/Button'
 import './Results.css'
-import Icon24Home from '@vkontakte/icons/dist/24/home'
 import Icon24Replay from '@vkontakte/icons/dist/24/replay'
 import { NOTIFICATIONS_STATUSES } from '../../constants'
 import { AppService } from '../AppService'
@@ -15,6 +14,7 @@ import Loader from '../helpers/Loader'
 import { Icon24Cancel } from '@vkontakte/icons'
 import { UserInstance } from '../../core/user-model'
 import { GameInstance } from '../../models/game-model'
+import HomeButton from '../helpers/HomeButton'
 
 type Props = {
   user: UserInstance
@@ -43,9 +43,7 @@ function SingleplayerResults({
 
   const navigationButtons = (
     <div className="action-buttons-wrapper">
-      <Button onClick={onGoBack} size="l" before={<Icon24Home />}>
-        Домой
-      </Button>
+      <HomeButton onClick={onGoBack} />
       <Button onClick={onRetry} size="l" before={<Icon24Replay />}>
         Еще раз
       </Button>
