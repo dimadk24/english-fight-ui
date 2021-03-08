@@ -5,6 +5,8 @@ import { Cell, Group } from '@vkontakte/vkui'
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar'
 import styles from './MultiplayerResults.module.css'
 import Loader from '../../helpers/Loader'
+import Button from '@vkontakte/vkui/dist/components/Button/Button'
+import Icon24Home from '@vkontakte/icons/dist/24/home'
 
 export type MultiplayerResultItem = {
   user: ScoreboardUserInstance
@@ -59,6 +61,11 @@ function MultiplayerResults({
             <div className={styles.loaderText}>{loaderText}</div>
           </>
         )}
+        <div className={styles.homeButtonWrapper}>
+          <Button onClick={onGoBack} size="l" before={<Icon24Home />}>
+            Домой
+          </Button>
+        </div>
       </Group>
     </>
   )

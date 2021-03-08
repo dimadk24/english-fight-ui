@@ -57,3 +57,8 @@
 .loaderText {
   text-align: center;
 }
+
+.homeButtonWrapper {
+  margin-top: 24px;
+  text-align: center;
+}
