@@ -393,6 +393,9 @@ const App = (): JSX.Element => {
             <MultiplayerResults
               onGoBack={goToHomePanel}
               items={multiplayerFinishedItems}
+              playersNumber={
+                (multiplayerGameDef && multiplayerGameDef.players.length) || 0
+              }
             />
           )}
         </Panel>
