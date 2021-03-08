@@ -182,9 +182,15 @@ export class ApiService {
     socket.addEventListener('error', throwOnError)
     socket.addEventListener('error', onError)
 
+    const originalClose = socket.close
+    socket.close = (...args) => {
+      socket.removeEventListener('close', throwOnClose)
+      originalClose.apply(socket, args)
+    }
+
     // @ts-ignore
     socket.sendJson = function sendJson(this: JsonWebSocket, data: Data) {
-      this.send(JSON.stringify(data))
+      socket.send(JSON.stringify(data))
     }
     // @ts-ignore
     socket.sendEvent = function sendEvent(
