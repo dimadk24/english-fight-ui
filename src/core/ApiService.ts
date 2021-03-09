@@ -16,6 +16,11 @@ const websocketCloseCodeToError = {
   3000: 'Не авторизован',
 }
 
+export const frontendWebsocketCloseCodes = {
+  FINISH_GAME: 3001,
+  CLOSE_GAME: 3002,
+}
+
 type Data = Record<string, unknown>
 
 type WSInputData = {

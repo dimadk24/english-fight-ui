@@ -30,7 +30,11 @@ import {
   GameDefinition,
   GameDefinitionInstance,
 } from '../models/game-definition-model'
-import { ApiService, JsonWebSocket } from '../core/ApiService'
+import {
+  ApiService,
+  frontendWebsocketCloseCodes,
+  JsonWebSocket,
+} from '../core/ApiService'
 import { URLUtils } from '../URLUtils'
 import ChooseMultiplayerGameAction from './panels/ChooseMultiplayerGameAction/ChooseMultiplayerGameAction'
 import JoinMultiplayerGame from './panels/JoinMultiplayerGame/JoinMultiplayerGame'
@@ -165,7 +169,9 @@ const App = (): JSX.Element => {
           currentItems.length ===
           multiplayerGameDefRef.current.players.length - 1
         ) {
-          multiplayerSocket.current.close()
+          multiplayerSocket.current.close(
+            frontendWebsocketCloseCodes.FINISH_GAME
+          )
         }
         return [
           ...currentItems,
@@ -311,6 +317,12 @@ const App = (): JSX.Element => {
     }
   }, [loading])
 
+  useEffect(() => {
+    if (gameMode === GameModes.multi && activeStory !== 'game') {
+      multiplayerSocket.current.close(frontendWebsocketCloseCodes.CLOSE_GAME)
+    }
+  }, [activeStory, multiplayerSocket, gameMode])
+
   let popoutToRender: JSX.Element | null = null
   if (popout) popoutToRender = popout
   else if (loading && loadingTooLong) popoutToRender = <ScreenSpinner />
@@ -386,12 +398,23 @@ const App = (): JSX.Element => {
         <Panel id="lobby">
           <Lobby
             gameDefinition={multiplayerGameDef}
-            onGoBack={() => goToChooseGameTypePanel(gameMode)}
+            onGoBack={() => {
+              goToChooseGameTypePanel(gameMode)
+              multiplayerSocket.current.close(
+                frontendWebsocketCloseCodes.CLOSE_GAME
+              )
+            }}
           />
         </Panel>
         <Panel id="battle">
           <Battle
-            onGoBack={() => goToChooseGameTypePanel(gameMode)}
+            onGoBack={() => {
+              goToChooseGameTypePanel(gameMode)
+              if (gameMode === GameModes.multi)
+                multiplayerSocket.current.close(
+                  frontendWebsocketCloseCodes.CLOSE_GAME
+                )
+            }}
             onFinishGame={onFinishGame}
             gameType={gameType}
             gameMode={gameMode}
@@ -410,7 +433,12 @@ const App = (): JSX.Element => {
           )}
           {gameMode === GameModes.multi && (
             <MultiplayerResults
-              onGoBack={goToHomePanel}
+              onGoBack={() => {
+                goToHomePanel()
+                multiplayerSocket.current.close(
+                  frontendWebsocketCloseCodes.CLOSE_GAME
+                )
+              }}
               items={multiplayerFinishedItems}
               playersNumber={
                 (multiplayerGameDef && multiplayerGameDef.players.length) || 0
