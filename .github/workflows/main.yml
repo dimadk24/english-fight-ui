@@ -87,6 +87,7 @@ jobs:
       REACT_APP_VK_PIXEL_ID: ${{secrets.VK_PIXEL_ID}}
       REACT_APP_GOOGLE_ANALYTICS_ID: ${{secrets.GOOGLE_ANALYTICS_ID}}
       REACT_APP_MIXPANEL_ID: ${{secrets.MIXPANEL_ID}}
+      REACT_APP_SPLIT_KEY: ${{secrets.SPLIT_KEY}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
