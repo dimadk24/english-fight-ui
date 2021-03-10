@@ -35,6 +35,8 @@ import MultiplayerResults, {
 import { ScoreboardUserInstance } from '../models/scoreboard-user-model'
 import { FinishedGameData } from '../websocket-data-types'
 import useStateRef from '../core/hooks/use-state-ref'
+import useFeatureFlag from '../core/hooks/use-feature-flag'
+import { MULTIPLAYER } from '../core/feature-flags'
 
 type Props = {
   user: UserInstance | null
@@ -71,6 +73,7 @@ const App = ({
     MultiplayerResultItem[]
   >([])
   const multiplayerSocket = useRef<JsonWebSocket | null>(null)
+  const { enabled: multiplayerEnabled } = useFeatureFlag(MULTIPLAYER)
 
   const joinedMultiplayerGame = useCallback(
     ({ instance }: { instance: GameDefinitionInstance }) => {
@@ -165,11 +168,12 @@ const App = ({
   )
 
   useEffect(() => {
+    if (!multiplayerEnabled) return
     const joinGameDefId = URLUtils.getHashParam('gid')
     if (joinGameDefId) {
       joinMultiplayerGame(joinGameDefId)
     }
-  }, [joinMultiplayerGame])
+  }, [joinMultiplayerGame, multiplayerEnabled])
 
   const onFinishGame = async (localBattle: GameInstance) => {
     const updatedBattle = await BattleService.getBattle(localBattle.id)
