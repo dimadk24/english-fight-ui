@@ -93,7 +93,7 @@ function Lobby({ gameDefinition, onGoBack }: Props): JSX.Element {
           </div>
           {copiedToastVisible && (
             <Snackbar onClose={onCloseToast} duration={3000}>
-              Ссылка скопирована
+              Скопировано
             </Snackbar>
           )}
         </Div>
