@@ -1,12 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner'
-import Alert from '@vkontakte/vkui/dist/components/Alert/Alert'
 import '@vkontakte/vkui/dist/vkui.css'
-import { AppService } from './AppService'
 import './constant-styles.css'
 import { Utils } from '../Utils'
-import * as Sentry from '@sentry/react'
-import styles from './App.module.css'
 import { trackers } from '../core/trackers/trackers'
 import { Epic, Panel, Tabbar, TabbarItem, View } from '@vkontakte/vkui'
 import { GameInstance } from '../models/game-model'
@@ -16,12 +12,7 @@ import Battle from './panels/Battle'
 import SingleplayerResults from './panels/SingleplayerResults'
 import { Icon28HomeOutline, Icon28UsersOutline } from '@vkontakte/icons'
 import ScoreboardHome from './panels/ScoreboardHome'
-import {
-  DELAY_BEFORE_LOADER,
-  GameModes,
-  GameType,
-  NOTIFICATIONS_STATUSES,
-} from '../constants'
+import { DELAY_BEFORE_LOADER, GameModes, GameType } from '../constants'
 import { UserInstance } from '../core/user-model'
 import ChooseGameType from './panels/ChooseGameType'
 import { VkPixelTracker } from '../core/trackers/VkPixelTracker'
@@ -45,15 +36,26 @@ import { ScoreboardUserInstance } from '../models/scoreboard-user-model'
 import { FinishedGameData } from '../websocket-data-types'
 import useStateRef from '../core/hooks/use-state-ref'
 
-const App = (): JSX.Element => {
-  const [user, setUser] = useState<UserInstance | null>(null)
-  const [loadingUser, setLoadingUser] = useState(false)
+type Props = {
+  user: UserInstance | null
+  loadingUser: boolean
+  setUser(user: UserInstance): void
+  refreshUser(): void
+  popout: JSX.Element | null
+}
+
+const App = ({
+  user,
+  loadingUser,
+  setUser,
+  refreshUser,
+  popout,
+}: Props): JSX.Element => {
   const [loadingMultiplayerGameDef, setLoadingMultiplayerGameDef] = useState(
     false
   )
   const [loadingSinglePlayerGame, setLoadingSinglePlayerGame] = useState(false)
   const [loadingTooLong, setLoadingTooLong] = useState(false)
-  const [popout, setPopout] = useState<JSX.Element | null>(null)
   const [activeStory, setActiveStory] = useState('game')
   const [activePanel, setActivePanel] = useState('home')
   const [battle, setBattle] = useState<GameInstance | null>(null)
@@ -69,69 +71,6 @@ const App = (): JSX.Element => {
     MultiplayerResultItem[]
   >([])
   const multiplayerSocket = useRef<JsonWebSocket | null>(null)
-
-  useEffect(() => {
-    if (Utils.isProductionMode) {
-      Sentry.init({
-        dsn: process.env.REACT_APP_SENTRY_DSN,
-        beforeSend(event, hint) {
-          if (event.exception) {
-            const errorMessage =
-              hint &&
-              hint.originalException &&
-              hint.originalException instanceof Error &&
-              hint.originalException.message
-                ? hint.originalException.message
-                : ''
-            setPopout(
-              <Alert
-                actions={[
-                  {
-                    mode: 'default',
-                    title: 'ОК',
-                    autoclose: true,
-                  },
-                ]}
-                onClose={() => setPopout(null)}
-              >
-                <h2>Возникла ошибка =(</h2>
-                {errorMessage && (
-                  <p className={styles.errorMessage}>{errorMessage}</p>
-                )}
-                <p>Попробуй еще раз</p>
-              </Alert>
-            )
-          }
-          return event
-        },
-      })
-    }
-    trackers.init()
-    trackers.reachGoal('open app')
-  }, [])
-
-  async function fetchUser(isInitialRequest: boolean) {
-    setLoadingUser(true)
-    try {
-      const fetchedUser = await AppService.fetchUserData()
-      setUser(fetchedUser)
-      if (isInitialRequest) {
-        if (
-          fetchedUser.notificationsStatus === NOTIFICATIONS_STATUSES.ALLOW &&
-          !AppService.areNotificationsEnabledOnVkSide
-        ) {
-          setUser(await AppService.blockNotifications())
-        }
-        trackers.identify(fetchedUser.id, fetchedUser.vkId)
-      }
-    } finally {
-      setLoadingUser(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchUser(true)
-  }, [])
 
   const joinedMultiplayerGame = useCallback(
     ({ instance }: { instance: GameDefinitionInstance }) => {
@@ -238,7 +177,7 @@ const App = (): JSX.Element => {
     setActivePanel('results')
     trackers.reachGoal('finish-game')
     VkPixelTracker.reachGoal('conversion')
-    fetchUser(false)
+    refreshUser()
   }
 
   const goToHomePanel = () => setActivePanel('home')
