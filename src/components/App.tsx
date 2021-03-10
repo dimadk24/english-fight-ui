@@ -229,8 +229,10 @@ const App = ({
         {
           joinedGame: ({ instance }: { instance: GameDefinitionInstance }) => {
             joinedMultiplayerGame({ instance })
-            if (instance.players.length === 2)
+            if (instance.players.length === 2) {
               multiplayerSocket.current.sendEvent('start-game')
+              trackers.reachGoal('launch-multiplayer-game')
+            }
           },
           startedGame: startedMultiplayerGame,
           finishedGame: finishedMultiplayerGame,
