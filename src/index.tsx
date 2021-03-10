@@ -3,9 +3,9 @@ import 'core-js/features/set'
 import React from 'react'
 import { render as renderReact } from 'react-dom'
 import bridge from '@vkontakte/vk-bridge'
-import App from './components/App'
 import { Utils } from './Utils'
 import { ErrorBoundary } from './components/ErrorBoundary'
+import AppWrapper from './components/AppWrapper'
 
 // Init VK  Mini App
 bridge.send('VKWebAppInit')
@@ -23,7 +23,7 @@ function render() {
   renderReact(
     <React.StrictMode>
       <ErrorBoundary>
-        <App />
+        <AppWrapper />
       </ErrorBoundary>
     </React.StrictMode>,
     document.getElementById('root')
