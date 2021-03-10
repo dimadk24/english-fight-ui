@@ -2383,6 +2383,20 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@splitsoftware/splitio-react@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@splitsoftware/splitio-react/-/splitio-react-1.2.4.tgz#a4d85bbdf607ba4d3aea3550a1f9d9e74f2a4db6"
+  integrity sha512-QszZb4FG7ffDAAgsCPtso+ocAmFWYqzQKP4YxnmTQ3e+1cUgUsWqaHFQrf5ZWZ/j+6cfiEhJQgINbOwmxqi7HA==
+  dependencies:
+    "@babel/runtime" "^7.10.2"
+    "@types/google.analytics" "0.0.40"
+    events "3.1.0"
+    memoize-one "^5.1.1"
+    object-assign "^4.1.1"
+    shallowequal "^1.1.0"
+    unfetch "^4.1.0"
+    utfx "1.0.1"
+
 "@splitsoftware/splitio@^10.15.3":
   version "10.15.3"
   resolved "https://registry.yarnpkg.com/@splitsoftware/splitio/-/splitio-10.15.3.tgz#34fb90e141b202756a562437faf56aaf5953a79d"
@@ -8508,6 +8522,11 @@ media-typer@0.3.0:
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
   integrity sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=
 
+memoize-one@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.1.1.tgz#047b6e3199b508eaec03504de71229b8eb1d75c0"
+  integrity sha512-HKeeBpWvqiVJD57ZUAsJNm71eHTykffzcLZVYWiVfQeI1rJtuEaS7hQiEpWfVVk18donPwJEcFKIkCmPJNOhHA==
+
 memory-fs@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/memory-fs/-/memory-fs-0.4.1.tgz#3a9a20b8462523e447cfbc7e8bb80ed667bfc552"
@@ -11361,6 +11380,11 @@ sha.js@^2.4.0, sha.js@^2.4.8:
   dependencies:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
+
+shallowequal@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/shallowequal/-/shallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
+  integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
 
 shebang-command@^1.2.0:
   version "1.2.0"
