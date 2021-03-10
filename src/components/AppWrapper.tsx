@@ -6,6 +6,7 @@ import * as Sentry from '@sentry/react'
 import Alert from '@vkontakte/vkui/dist/components/Alert/Alert'
 import styles from './App.module.css'
 import { trackers } from '../core/trackers/trackers'
+import FeatureFlagProvider from '../core/components/FeatureFlagProvider/FeatureFlagProvider'
 
 function AppWrapper(): JSX.Element {
   const [popout, setPopout] = useState<JSX.Element | null>(null)
@@ -54,13 +55,15 @@ function AppWrapper(): JSX.Element {
     <WithUser>
       {({ loadingUser, user, setUser, refreshUser }) => {
         return (
-          <App
-            user={user}
-            loadingUser={loadingUser}
-            setUser={setUser}
-            refreshUser={refreshUser}
-            popout={popout}
-          />
+          <FeatureFlagProvider user={user}>
+            <App
+              user={user}
+              loadingUser={loadingUser}
+              setUser={setUser}
+              refreshUser={refreshUser}
+              popout={popout}
+            />
+          </FeatureFlagProvider>
         )
       }}
     </WithUser>
