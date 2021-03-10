@@ -172,6 +172,7 @@ const App = ({
     const joinGameDefId = URLUtils.getHashParam('gid')
     if (joinGameDefId) {
       joinMultiplayerGame(joinGameDefId)
+      setGameMode(GameModes.multi)
     }
   }, [joinMultiplayerGame, multiplayerEnabled])
 
