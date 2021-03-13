@@ -127,6 +127,10 @@ const App = ({
     [multiplayerGameDefRef, multiplayerSocket]
   )
 
+  useEffect(() => {
+    setMultiplayerFinishedItems([])
+  }, [multiplayerGameDef])
+
   const joinMultiplayerGame = useCallback(
     async (gameDefId) => {
       setLoadingMultiplayerGameDef(true)
