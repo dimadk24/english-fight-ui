@@ -4,6 +4,15 @@ object-assign
 @license MIT
 */
 
+/*!
+ * +----------------------------------------------------------------------------------+
+ * | murmurHash3.js v3.0.0 (http://github.com/karanlyons/murmurHash3.js)              |
+ * | A TypeScript/JavaScript implementation of MurmurHash3's hashing algorithms.      |
+ * |----------------------------------------------------------------------------------|
+ * | Copyright (c) 2012-2020 Karan Lyons. Freely distributable under the MIT license. |
+ * +----------------------------------------------------------------------------------+
+ */
+
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -27,6 +36,12 @@ PERFORMANCE OF THIS SOFTWARE.
  *
  * Copyright (c) 2014-2016 Giulio Canti
  *
+ */
+
+/**
+ * @license utfx (c) 2014 Daniel Wirtz <dcode@dcode.io>
+ * Released under the Apache License, Version 2.0
+ * see: https://github.com/dcodeIO/utfx for details
  */
 
 /** @license React v0.19.1
