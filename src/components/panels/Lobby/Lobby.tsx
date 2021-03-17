@@ -34,7 +34,20 @@ function Lobby({ gameDefinition, onGoBack }: Props): JSX.Element {
     await bridge.send('VKWebAppCopyText', { text })
     setCopiedToastVisible(true)
   }
-  const shareLink = () => bridge.send('VKWebAppShare', { link: inviteUrl })
+  const shareLink = async () => {
+    try {
+      await bridge.send('VKWebAppShare', { link: inviteUrl })
+    } catch (e) {
+      const isUserCancelled =
+        e.error_type === 'client_error' &&
+        e.error_data &&
+        e.error_data.error_code === 4 &&
+        e.error_data.error_reason === 'User denied'
+      if (!isUserCancelled) {
+        throw e
+      }
+    }
+  }
 
   const onCloseToast = () => setCopiedToastVisible(false)
 
