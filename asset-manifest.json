@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/english-fight-ui/static/css/main.6894f757.chunk.css",
-    "main.js": "/english-fight-ui/static/js/main.6bab2dbd.chunk.js",
-    "main.js.map": "/english-fight-ui/static/js/main.6bab2dbd.chunk.js.map",
+    "main.js": "/english-fight-ui/static/js/main.d9bbea24.chunk.js",
+    "main.js.map": "/english-fight-ui/static/js/main.d9bbea24.chunk.js.map",
     "runtime-main.js": "/english-fight-ui/static/js/runtime-main.f948165a.js",
     "runtime-main.js.map": "/english-fight-ui/static/js/runtime-main.f948165a.js.map",
     "static/css/2.d6b48c90.chunk.css": "/english-fight-ui/static/css/2.d6b48c90.chunk.css",
@@ -23,6 +23,6 @@
     "static/css/2.d6b48c90.chunk.css",
     "static/js/2.3a8faeef.chunk.js",
     "static/css/main.6894f757.chunk.css",
-    "static/js/main.6bab2dbd.chunk.js"
+    "static/js/main.d9bbea24.chunk.js"
   ]
 }
