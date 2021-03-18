@@ -32,7 +32,7 @@ function JoinMultiplayerGame({ onJoin, onBack }: Props): JSX.Element {
         <form onSubmit={onSubmit}>
           <Input onChange={onChangeJoinMultiplayerGameId} />
           <Div>
-            <Button type="submit" stretched size="xl">
+            <Button type="submit" stretched size="xl" disabled={!gameId.trim()}>
               Присоединиться
             </Button>
           </Div>
