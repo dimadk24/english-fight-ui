@@ -3,10 +3,11 @@ import { createTracker, TrackerInterface } from './tracker-utils'
 import { URLUtils } from '../../URLUtils'
 
 const MIXPANEL_ID = process.env.REACT_APP_MIXPANEL_ID
+const MIXPANEL_PROXY_HOST = process.env.REACT_APP_MIXPANEL_PROXY_HOST
 
 export const MixpanelTracker: TrackerInterface = createTracker({
   async init() {
-    mixpanel.init(MIXPANEL_ID)
+    mixpanel.init(MIXPANEL_ID, { api_host: MIXPANEL_PROXY_HOST })
   },
 
   async identify(id: number, vkId: number): Promise<void> {
