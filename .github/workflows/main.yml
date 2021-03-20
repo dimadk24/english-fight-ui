@@ -84,6 +84,7 @@ jobs:
       REACT_APP_SENTRY_DSN: ${{secrets.SENTRY_DSN}}
       REACT_APP_VK_PIXEL_ID: ${{secrets.VK_PIXEL_ID}}
       REACT_APP_MIXPANEL_ID: ${{secrets.MIXPANEL_ID}}
+      REACT_APP_MIXPANEL_PROXY_HOST: ${{secrets.MIXPANEL_PROXY_HOST}}
       REACT_APP_SPLIT_KEY: ${{secrets.SPLIT_KEY}}
     steps:
       - name: Checkout code
