@@ -1,1 +1,1 @@
-export const MULTIPLAYER = 'multiplayer'
+export {}

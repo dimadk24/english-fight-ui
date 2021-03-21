@@ -10,8 +10,6 @@ import { AppService } from '../AppService'
 import { UserInstance } from '../../core/user-model'
 import Loader from '../helpers/Loader'
 import { NOTIFICATIONS_STATUSES } from '../../constants'
-import useFeatureFlag from '../../core/hooks/use-feature-flag'
-import { MULTIPLAYER } from '../../core/feature-flags'
 
 type Props = {
   onStartSingleGame(): void
@@ -26,7 +24,6 @@ const Home = ({
   onUpdateUser,
 }: Props): JSX.Element => {
   const [loading, setLoading] = useState(false)
-  const { enabled: multiplayerEnabled } = useFeatureFlag(MULTIPLAYER)
 
   const onSwitchNotifications = async (event) => {
     const { checked: newChecked } = event.target
@@ -73,17 +70,15 @@ const Home = ({
               Начать одиночную игру
             </Button>
           </Cell>
-          {multiplayerEnabled && (
-            <Cell>
-              <Button
-                size="xl"
-                onClick={onStartMultiplayerGame}
-                disabled={loading}
-              >
-                Играть с другом
-              </Button>
-            </Cell>
-          )}
+          <Cell>
+            <Button
+              size="xl"
+              onClick={onStartMultiplayerGame}
+              disabled={loading}
+            >
+              Играть с другом
+            </Button>
+          </Cell>
         </Div>
       </Group>
 
