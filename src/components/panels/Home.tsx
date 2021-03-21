@@ -5,7 +5,7 @@ import Cell from '@vkontakte/vkui/dist/components/Cell/Cell'
 import Div from '@vkontakte/vkui/dist/components/Div/Div'
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar'
 import PanelHeader from '../helpers/PanelHeader'
-import { Switch } from '@vkontakte/vkui'
+import { Link, Switch } from '@vkontakte/vkui'
 import { AppService } from '../AppService'
 import { UserInstance } from '../../core/user-model'
 import Loader from '../helpers/Loader'
@@ -17,6 +17,9 @@ type Props = {
   user: UserInstance
   onUpdateUser(user: UserInstance): void
 }
+
+const connectDevLink = 'https://vk.me/english_clash'
+
 const Home = ({
   onStartSingleGame,
   onStartMultiplayerGame,
@@ -100,6 +103,13 @@ const Home = ({
           </Cell>
         </Group>
       )}
+      <Group>
+        <Cell>
+          <Link href={connectDevLink} target="_blank">
+            Связь с разработчиком
+          </Link>
+        </Cell>
+      </Group>
       {loading && <Loader />}
     </>
   )
