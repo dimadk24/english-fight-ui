@@ -55,7 +55,7 @@ function Question({ question, gameType, onSelectAnswer }: Props): JSX.Element {
           <Button
             key={answer}
             size="xl"
-            mode="primary"
+            mode="secondary"
             stretched
             className={classes}
             onClick={() => !selectedAnswer && onSelectAnswer(answer)}

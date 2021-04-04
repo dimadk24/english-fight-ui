@@ -1,7 +1,6 @@
 import React from 'react'
 import PanelHeader from '../../helpers/PanelHeader'
-import { Button, Div, Header } from '@vkontakte/vkui'
-import './ChooseMultiplayerGameAction.css'
+import { Cell, Group, List } from '@vkontakte/vkui'
 
 type Props = {
   onCreateNew(): void
@@ -16,18 +15,17 @@ function ChooseMultiplayerGameAction({
 }: Props): JSX.Element {
   return (
     <>
-      <PanelHeader text="Выбери действие" onBackButtonClick={onGoBack} />
-      <Div>
-        <Header mode="primary">Выбери действие:</Header>
-        <div className="choose-action-buttons-wrapper">
-          <Button onClick={onCreateNew} size="xl" stretched>
+      <PanelHeader text="Игра с другом" onBackButtonClick={onGoBack} />
+      <Group>
+        <List>
+          <Cell onClick={onCreateNew} expandable>
             Начать новую игру
-          </Button>
-          <Button onClick={onJoin} size="xl" stretched>
+          </Cell>
+          <Cell onClick={onJoin} expandable>
             Присоединиться к существующей
-          </Button>
-        </div>
-      </Div>
+          </Cell>
+        </List>
+      </Group>
     </>
   )
 }

@@ -1,8 +1,11 @@
 import React from 'react'
 import PanelHeader from '../helpers/PanelHeader'
-import { Button, Div, Header } from '@vkontakte/vkui'
+import { Cell, Group, Header, List } from '@vkontakte/vkui'
 import { GAME_TYPES } from '../../constants'
-import './ChooseGameType.css'
+import {
+  Icon28PictureOutline,
+  Icon28SortHorizontalOutline,
+} from '@vkontakte/icons'
 
 interface Props {
   onGoBack(): void
@@ -13,17 +16,24 @@ function ChooseGameType({ onGoBack, onChoose }: Props): JSX.Element {
   return (
     <>
       <PanelHeader text="Тип игры" onBackButtonClick={onGoBack} />
-      <Div>
-        <Header mode="primary">Выбери тип игры:</Header>
-        <div className="choose-game-type-body">
-          <Button size="l" onClick={() => onChoose(GAME_TYPES.PICTURE)}>
+      <Group header={<Header mode="primary">Выбери тип игры:</Header>}>
+        <List>
+          <Cell
+            before={<Icon28PictureOutline />}
+            expandable
+            onClick={() => onChoose(GAME_TYPES.PICTURE)}
+          >
             Картинка
-          </Button>
-          <Button size="l" onClick={() => onChoose(GAME_TYPES.WORD)}>
+          </Cell>
+          <Cell
+            before={<Icon28SortHorizontalOutline />}
+            expandable
+            onClick={() => onChoose(GAME_TYPES.WORD)}
+          >
             Перевод
-          </Button>
-        </div>
-      </Div>
+          </Cell>
+        </List>
+      </Group>
     </>
   )
 }

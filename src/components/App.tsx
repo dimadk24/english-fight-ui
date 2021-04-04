@@ -10,7 +10,7 @@ import { BattleService } from './panels/BattleService'
 import Home from './panels/Home'
 import Battle from './panels/Battle'
 import SingleplayerResults from './panels/SingleplayerResults'
-import { Icon28HomeOutline, Icon28UsersOutline } from '@vkontakte/icons'
+import { Icon28HomeOutline, Icon28ListOutline } from '@vkontakte/icons'
 import ScoreboardHome from './panels/ScoreboardHome'
 import { DELAY_BEFORE_LOADER, GameModes, GameType } from '../constants'
 import { UserInstance } from '../core/user-model'
@@ -294,7 +294,7 @@ const App = ({
             selected={activeStory === 'scoreboard'}
             onClick={onOpenScoreboard}
           >
-            <Icon28UsersOutline />
+            <Icon28ListOutline />
           </TabbarItem>
         </Tabbar>
       }
