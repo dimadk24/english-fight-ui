@@ -26,9 +26,7 @@ function JoinMultiplayerGame({ onJoin, onBack }: Props): JSX.Element {
     <>
       <PanelHeader text="Присоединиться к игре" onBackButtonClick={onBack} />
       <Div>
-        <div className="join-game-help-text">
-          Присоединиться к существующей игре по ID:
-        </div>
+        <div className="join-game-help-text">ID игры:</div>
         <form onSubmit={onSubmit}>
           <Input onChange={onChangeJoinMultiplayerGameId} />
           <Div>

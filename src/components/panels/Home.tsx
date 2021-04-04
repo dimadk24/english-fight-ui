@@ -10,6 +10,7 @@ import { AppService } from '../AppService'
 import { UserInstance } from '../../core/user-model'
 import Loader from '../helpers/Loader'
 import { NOTIFICATIONS_STATUSES } from '../../constants'
+import { Icon28UserOutline, Icon28UsersOutline } from '@vkontakte/icons'
 
 type Props = {
   onStartSingleGame(): void
@@ -69,15 +70,22 @@ const Home = ({
       <Group>
         <Div>
           <Cell>
-            <Button size="xl" onClick={onStartSingleGame} disabled={loading}>
+            <Button
+              before={<Icon28UserOutline />}
+              size="xl"
+              onClick={onStartSingleGame}
+              disabled={loading}
+            >
               Начать одиночную игру
             </Button>
           </Cell>
           <Cell>
             <Button
+              before={<Icon28UsersOutline />}
               size="xl"
               onClick={onStartMultiplayerGame}
               disabled={loading}
+              mode="secondary"
             >
               Играть с другом
             </Button>
