@@ -17,4 +17,9 @@ export enum GameModes {
   multi = 'multi',
 }
 
+export enum Themes {
+  bright_light = 'bright_light',
+  space_gray = 'space_gray',
+}
+
 export const DELAY_BEFORE_LOADER = 200

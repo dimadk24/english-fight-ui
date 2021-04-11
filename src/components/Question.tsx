@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Div from '@vkontakte/vkui/dist/components/Div/Div'
 import Button from '@vkontakte/vkui/dist/components/Button/Button'
 import './Question.css'
 import clsx from 'clsx'
 import { QuestionInstance } from '../models/question-model'
-import { GAME_TYPES } from '../constants'
+import { GAME_TYPES, Themes } from '../constants'
 import { QuestionService } from './QuestionService'
-import { Headline, Group } from '@vkontakte/vkui'
+import { Group, Headline } from '@vkontakte/vkui'
+import { ThemeContext } from '../context/theme'
 
 interface Props {
   question: QuestionInstance
@@ -47,6 +48,9 @@ function Question({ question, gameType, onSelectAnswer }: Props): JSX.Element {
     question: questionString,
   } = question
   const renderQuestion = renderQuestionMap[gameType]
+  const theme = useContext(ThemeContext)
+  const answerButtonMode =
+    theme === Themes.bright_light ? 'primary' : 'secondary'
   return (
     <>
       <Group>{renderQuestion(questionString)}</Group>
@@ -62,7 +66,7 @@ function Question({ question, gameType, onSelectAnswer }: Props): JSX.Element {
             <Button
               key={answer}
               size="xl"
-              mode="secondary"
+              mode={answerButtonMode}
               stretched
               className={classes}
               onClick={() => !selectedAnswer && onSelectAnswer(answer)}

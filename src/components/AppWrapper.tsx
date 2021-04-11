@@ -7,9 +7,28 @@ import Alert from '@vkontakte/vkui/dist/components/Alert/Alert'
 import styles from './App.module.css'
 import { trackers } from '../core/trackers/trackers'
 import FeatureFlagProvider from '../core/components/FeatureFlagProvider/FeatureFlagProvider'
+import bridge from '@vkontakte/vk-bridge'
+import { Themes } from '../constants'
+import { ThemeContext } from '../context/theme'
 
 function AppWrapper(): JSX.Element {
   const [popout, setPopout] = useState<JSX.Element | null>(null)
+  const [theme, setTheme] = useState<Themes>(Themes.bright_light)
+
+  useEffect(() => {
+    bridge.subscribe(({ detail: { type, data } }) => {
+      if (type === 'VKWebAppUpdateConfig') {
+        // @ts-ignore
+        setTheme(data.scheme || Themes.bright_light)
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    const schemeAttribute = document.createAttribute('scheme')
+    schemeAttribute.value = theme
+    document.body.attributes.setNamedItem(schemeAttribute)
+  }, [theme])
 
   useEffect(() => {
     if (Utils.isProductionMode) {
@@ -56,13 +75,15 @@ function AppWrapper(): JSX.Element {
       {({ loadingUser, user, setUser, refreshUser }) => {
         return (
           <FeatureFlagProvider user={user}>
-            <App
-              user={user}
-              loadingUser={loadingUser}
-              setUser={setUser}
-              refreshUser={refreshUser}
-              popout={popout}
-            />
+            <ThemeContext.Provider value={theme}>
+              <App
+                user={user}
+                loadingUser={loadingUser}
+                setUser={setUser}
+                refreshUser={refreshUser}
+                popout={popout}
+              />
+            </ThemeContext.Provider>
           </FeatureFlagProvider>
         )
       }}
