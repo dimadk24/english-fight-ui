@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import { QuestionInstance } from '../models/question-model'
 import { GAME_TYPES } from '../constants'
 import { QuestionService } from './QuestionService'
-import { Group } from '@vkontakte/vkui'
+import { Headline, Group } from '@vkontakte/vkui'
 
 interface Props {
   question: QuestionInstance
@@ -17,17 +17,23 @@ interface Props {
 const renderQuestionMap = {
   [GAME_TYPES.WORD]: (questionWord: string) => (
     <>
-      <p>Слово на английском: {questionWord}</p>
-      <p>Выбери его перевод на русский:</p>
+      <Headline
+        weight="semibold"
+        className="word-question"
+        style={{ fontSize: '20px', padding: '16px 0', textAlign: 'center' }}
+      >
+        {questionWord}
+      </Headline>
     </>
   ),
   [GAME_TYPES.PICTURE]: (imagePath: string) => (
     <div className="picture-question">
-      <img
-        src={QuestionService.createFullPictureUrl(imagePath)}
-        alt="Картинка с вопросом"
-      />
-      <span>Это -</span>
+      <div className="picture-wrapper">
+        <img
+          src={QuestionService.createFullPictureUrl(imagePath)}
+          alt="Картинка с вопросом"
+        />
+      </div>
     </div>
   ),
 }
@@ -42,29 +48,31 @@ function Question({ question, gameType, onSelectAnswer }: Props): JSX.Element {
   } = question
   const renderQuestion = renderQuestionMap[gameType]
   return (
-    <Div>
+    <>
       <Group>{renderQuestion(questionString)}</Group>
-      {answerWords.map((answer) => {
-        const isCorrectAnswer = answer === correctAnswer
-        const isFailure = !isCorrect && answer === selectedAnswer
-        const classes = clsx('answer-button', {
-          correct: isCorrectAnswer,
-          failure: isFailure,
-        })
-        return (
-          <Button
-            key={answer}
-            size="xl"
-            mode="secondary"
-            stretched
-            className={classes}
-            onClick={() => !selectedAnswer && onSelectAnswer(answer)}
-          >
-            {answer}
-          </Button>
-        )
-      })}
-    </Div>
+      <Div>
+        {answerWords.map((answer) => {
+          const isCorrectAnswer = answer === correctAnswer
+          const isFailure = !isCorrect && answer === selectedAnswer
+          const classes = clsx('answer-button', {
+            correct: isCorrectAnswer,
+            failure: isFailure,
+          })
+          return (
+            <Button
+              key={answer}
+              size="xl"
+              mode="secondary"
+              stretched
+              className={classes}
+              onClick={() => !selectedAnswer && onSelectAnswer(answer)}
+            >
+              {answer}
+            </Button>
+          )
+        })}
+      </Div>
+    </>
   )
 }
 

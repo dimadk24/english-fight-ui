@@ -10,16 +10,23 @@
   background: var(--failure-color);
 }
 
-.picture-question {
+.picture-wrapper {
+  background: white;
   display: flex;
   flex-direction: column;
   margin-bottom: 16px;
 }
 
-.picture-question > img {
+.picture-wrapper > img {
   margin: 16px 0;
   max-width: 200px;
   max-height: 200px;
   align-self: center;
   border-radius: 8px;
+}
+
+.word-question {
+  font-size: 20px;
+  padding: 16px 0;
+  text-align: center;
 }
