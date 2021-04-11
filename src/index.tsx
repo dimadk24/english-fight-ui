@@ -10,15 +10,6 @@ import AppWrapper from './components/AppWrapper'
 // Init VK  Mini App
 bridge.send('VKWebAppInit')
 
-bridge.subscribe(({ detail: { type, data } }) => {
-  if (type === 'VKWebAppUpdateConfig') {
-    const schemeAttribute = document.createAttribute('scheme')
-    // @ts-ignore
-    schemeAttribute.value = data.scheme || 'client_light'
-    document.body.attributes.setNamedItem(schemeAttribute)
-  }
-})
-
 function render() {
   renderReact(
     <React.StrictMode>
