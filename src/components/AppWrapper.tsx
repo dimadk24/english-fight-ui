@@ -16,6 +16,7 @@ function AppWrapper(): JSX.Element {
   const [theme, setTheme] = useState<Themes>(Themes.bright_light)
 
   useEffect(() => {
+    bridge.send('VKWebAppInit')
     bridge.subscribe(({ detail: { type, data } }) => {
       if (type === 'VKWebAppUpdateConfig') {
         // @ts-ignore
